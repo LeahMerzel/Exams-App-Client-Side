@@ -1,18 +1,15 @@
 import React, { createContext, useState, useContext } from 'react';
-import { authenticateUser, fetchUserData } from '../api/AuthApi'; 
-import { createEntityAPI } from '../api/CrudApi'; 
+import { authenticateUser, fetchUserData, registerUser } from '../api/AuthApi'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  // For development purposes setting to default user
-  const [user, setUser] = useState({ id: 1, username: 'exampleUser' });
-  const [userLoggedIn, setUserLoggedIn] = useState(true); // true for development
+  const [user, setUser] = useState();
+  const [userLoggedIn, setUserLoggedIn] = useState(false); 
 
   const login = async (userData) => {
-    setUserLoggedIn(true); // this line is for development
     try {
       const response = await authenticateUser(userData);
       setUser(response);
@@ -33,7 +30,7 @@ export const UserProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await createEntityAPI(userData);
+      const response = await registerUser(userData);
       setUser(response);
       setUserLoggedIn(true);
       toast.success('Registered successfully!');

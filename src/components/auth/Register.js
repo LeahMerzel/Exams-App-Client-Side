@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from './UserContext';
 import Form from '../forms/Form';
-import { Container } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { register, user } = useUser();
+  const { register, user, isLoading } = useUser();
   const [error, setError] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
@@ -57,6 +57,7 @@ const Register = () => {
   return (
     <div>
       <Container className="align-items-center mt-3 mb-5 p-3">
+        {isLoading && <Spinner animation="border" />}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <Form fields={fields} onSubmit={handleSubmit} entityName="Register" />
         <p>

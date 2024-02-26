@@ -1,4 +1,19 @@
 // AuthApi.js
+const registerUser = async (userData) => {
+  const response = await fetch('/api/Auth/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to register user');
+  }
+
+  return response.json();
+};
 
 const authenticateUser = async (userData) => {
   const response = await fetch('/api/Auth/login', {
@@ -12,7 +27,11 @@ const authenticateUser = async (userData) => {
   if (!response.ok) {
     throw new Error('Failed to authenticate user');
   }
-  return response.json(); 
+
+  const responseData = await response.json();
+  const { token, refreshToken } = responseData; 
+
+  return { token, refreshToken };
 };
 
 const fetchUserData = async (userId) => {
@@ -23,4 +42,4 @@ const fetchUserData = async (userId) => {
   return response.json(); 
 };
 
-export { authenticateUser, fetchUserData };
+export { registerUser, authenticateUser, fetchUserData };
