@@ -7,10 +7,10 @@ import useFilterableTable from "../hooks/useFilterableTable";
 import UpdateUser from './UpdateUser';
 import { Spinner, Alert } from "react-bootstrap";
 
-const GetUserData = ({forUser}) => {
+const GetUserData = ({token, forUser}) => {
   const { user, login, logout } = useUser(forUser);
   const getUserDataApiUrl = `https://localhost:7252/api/Auth/get-user/${user.Id}`;
-  const { data: userData, isLoading, error } = useFetch(getUserDataApiUrl);
+  const { data: userData, isLoading, error } = useFetch(token, getUserDataApiUrl);
   const { filteredData } = useFilterableTable(userData || []);
 
   const handleEdit = (item) => {

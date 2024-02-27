@@ -5,9 +5,9 @@ import DataTable from "../filterableTable/DataTable";
 import SearchBar from '../filterableTable/SearchBar';
 import { Spinner, Alert } from "react-bootstrap";
 
-const GetSubmitedExams = ({ studentId, examId}) => {
+const GetSubmitedExams = ({ token, studentId, examId}) => {
     let getAllStudenExamsApiUrl = studentId? `https://localhost:7252/api/User/${studentId}/submitted-exams`: `https://localhost:7252/api/StudentExam/${examId}/submitted-student-exams`;
-    const { data: submitedExams, isLoading, error } = useFetch(getAllStudenExamsApiUrl || '');
+    const { data: submitedExams, isLoading, error } = useFetch(token, getAllStudenExamsApiUrl || '');
     const { filterText, setFilterText, filteredData } = useFilterableTable(submitedExams || []);
   
     return (

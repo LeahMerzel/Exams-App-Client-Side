@@ -7,9 +7,9 @@ import DataTable from "../filterableTable/DataTable";
 import SearchBar from '../filterableTable/SearchBar';
 import TakeExam from "./TakeExam";
 
-const GetUpcomingExams = ({courseId}) => {
+const GetUpcomingExams = ({token, courseId}) => {
     const getUpcomingExamsByCourseApiUrl = `https://localhost:7252/api/Exam/${courseId}/questions`;
-    const { data: upcomingExams, isLoading, error } = useFetch(getUpcomingExamsByCourseApiUrl);
+    const { data: upcomingExams, isLoading, error } = useFetch(token, getUpcomingExamsByCourseApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(upcomingExams || []);
     const [isRoleStudent] = useState(true);
     const [showTakeExamModal, setShowTakeExamModal] = useState(false);

@@ -4,9 +4,9 @@ import useCreate from "../hooks/useCreate";
 import Form from "../forms/Form";
 import CreateNewQuestion from "./questions/CreateNewQuestion";
 
-const CreateNewExam = ({id}) => {
+const CreateNewExam = ({token, id}) => {
     const createExamApiUrl = "https://localhost:7252/api/Exam/create";
-    const { createEntity, isLoading, error } = useCreate(createExamApiUrl);
+    const { createEntity, isLoading, error } = useCreate(token, createExamApiUrl);
     const [questionsOrderRandom, setQuestionsOrderRandom] = useState(false); 
 
     const fields = [

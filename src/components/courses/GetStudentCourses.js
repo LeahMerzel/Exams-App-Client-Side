@@ -3,9 +3,9 @@ import useFetch from "../hooks/useFetch";
 import GetUpcomingExams from '../exams/GetUpcomingExams';
 import { Button } from "react-bootstrap";
 
-const GetStudentCourses = ({ studentId }) => {
+const GetStudentCourses = ({ token, studentId }) => {
     const getStudentCoursesApiUrl = `https://localhost:7252/api/User/${studentId}/courses`;
-    const { data: studentCourses, isLoading, error } = useFetch(getStudentCoursesApiUrl);
+    const { data: studentCourses, isLoading, error } = useFetch(token, getStudentCoursesApiUrl);
     const [ getUpcomingExams, setGetUpcomingExams ] = useState(false);
 
     return (

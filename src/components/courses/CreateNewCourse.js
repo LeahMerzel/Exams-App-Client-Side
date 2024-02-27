@@ -3,9 +3,9 @@ import useCreate from "../hooks/useCreate";
 import { Spinner, Alert } from "react-bootstrap";
 import Form from "../forms/Form";
 
-const CreateNewCourse = () => {
+const CreateNewCourse = ({token}) => {
     const createCourseApiUrl = "https://localhost:7252/api/Course/create";
-    const { createEntity, isLoading, error  } = useCreate(createCourseApiUrl);
+    const { createEntity, isLoading, error  } = useCreate(token, createCourseApiUrl);
   
     const fields = [
         { name: "courseName", label: "Course Name", type: "text" },

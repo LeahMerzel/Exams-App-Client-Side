@@ -6,9 +6,9 @@ import SearchBar from '../filterableTable/SearchBar';
 import UpdateUser from "./UpdateUser";
 import { Spinner, Alert } from "react-bootstrap";
 
-const GetAllUsers = ({id, token}) => {
+const GetAllUsers = ({token, id}) => {
     let getAllUsersApiUrl = id? `https://localhost:7252/api/User/${id}/students`: "https://localhost:7252/api/Auth/get-all";
-    const { data: users, isLoading, error } = useFetch(getAllUsersApiUrl, token);
+    const { data: users, isLoading, error } = useFetch(token, getAllUsersApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(users);
 
     const handleEdit = (item) => {

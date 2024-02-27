@@ -7,22 +7,22 @@ import GetStudentCourses from "../courses/GetStudentCourses";
 import GetSubmitedExams from "../exams/GetSubmitedExams";
 
 const StudentDashboard = () => {
-  const { user, userLoggedIn} = useUser()
+  const { token, user, userLoggedIn} = useUser()
 
   return (
     <div>
     <Container className="align-items-center mt-3 p-3 mb-5">
       <h3>Student Dashboard</h3>
       <h4>My Info</h4>
-      <GetUserData forUser={user}/>
+      <GetUserData token={token} forUser={user}/>
       {userLoggedIn && (
         <>
           <h4>Upcoming Exams</h4>
-          <GetUpcomingExams studentId={user.Id}/>
+          <GetUpcomingExams token={token} studentId={user.Id}/>
           <h4>Exams I Took</h4>
-          <GetSubmitedExams studentId={user.Id}/>
+          <GetSubmitedExams token={token} studentId={user.Id}/>
           <h4>My Courses</h4>
-          <GetStudentCourses studentId={user.Id}/>
+          <GetStudentCourses token={token} studentId={user.Id}/>
        </>
       )}
       </Container>

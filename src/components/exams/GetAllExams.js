@@ -7,9 +7,9 @@ import SearchBar from '../filterableTable/SearchBar';
 import UpdateExam from './UpdateExam';
 import GetSubmitedExams from "./GetSubmitedExams";
 
-const GetAllExams = ({id}) => {
+const GetAllExams = ({token, id}) => {
     let getAllExamsApiUrl = id ? `https://localhoast:7252/api/Teacher/${id}/exams` : "https://localhost:7252/api/Exam/get-all";
-    const { data: exams, isLoading, error } = useFetch(getAllExamsApiUrl);
+    const { data: exams, isLoading, error } = useFetch(token, getAllExamsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(exams || []);
 
     const handleEdit = (item) => {
