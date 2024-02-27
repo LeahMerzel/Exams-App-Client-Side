@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
-import { authenticateUser, fetchUserData, registerUser } from '../api/AuthApi'; 
+import { authenticateUser, fetchUserData, registerAndLoginUser } from '../api/AuthApi'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -8,12 +8,14 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [userLoggedIn, setUserLoggedIn] = useState(false); 
+  const [token, setToken] = useState();
 
   const login = async (userData) => {
     try {
       const response = await authenticateUser(userData);
       setUser(response);
       setUserLoggedIn(true);
+      setToken(response.token)
       const additionalUserData = await fetchUserData(response.id);
       // Do something with additional user data
       toast.success('Login successful!');
@@ -30,7 +32,7 @@ export const UserProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await registerUser(userData);
+      const response = await registerAndLoginUser(userData);
       setUser(response);
       setUserLoggedIn(true);
       toast.success('Registered successfully!');
@@ -57,7 +59,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, userLoggedIn, login, logout, register, additionalUserData }}>
+    <UserContext.Provider value={{ token, user, userLoggedIn, login, logout, register, additionalUserData }}>
       {children}
     </UserContext.Provider>
   );

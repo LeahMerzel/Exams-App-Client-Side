@@ -1,5 +1,6 @@
 // AuthApi.js
-const registerUser = async (userData) => {
+
+const registerAndLoginUser = async (userData) => {
   const response = await fetch('/api/Auth/register', {
     method: 'POST',
     headers: {
@@ -12,6 +13,8 @@ const registerUser = async (userData) => {
     throw new Error('Failed to register user');
   }
 
+  authenticateUser(userData);
+  
   return response.json();
 };
 
@@ -30,16 +33,25 @@ const authenticateUser = async (userData) => {
 
   const responseData = await response.json();
   const { token, refreshToken } = responseData; 
-
-  return { token, refreshToken };
+  saveTokenToLocalStorage(token);
+  return { userData, token, refreshToken };
 };
 
-const fetchUserData = async (userId) => {
-  const response = await fetch(`/api/Auth/get-user/${userId}`);
+const fetchUserData = async (userId, token) => {
+  const response = await fetch(`/api/Auth/get-user/${userId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
   if (!response.ok) {
     throw new Error('Failed to fetch user data');
   }
   return response.json(); 
 };
 
-export { registerUser, authenticateUser, fetchUserData };
+const saveTokenToLocalStorage = (token) => {
+  localStorage.setItem('token', token);
+};
+
+export { registerAndLoginUser, authenticateUser, fetchUserData };

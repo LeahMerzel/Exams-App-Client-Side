@@ -1,10 +1,11 @@
 // CrudApi.js
 
-export const createEntityAPI = async (apiUrl, entityData) => {
+export const createEntityAPI = async (apiUrl, entityData, token) => {
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(entityData),
@@ -20,11 +21,12 @@ export const createEntityAPI = async (apiUrl, entityData) => {
     }
   };
   
-  export const updateEntityAPI = async (apiUrl, entityId, updatedData) => {
+  export const updateEntityAPI = async (apiUrl, entityId, updatedData, token) => {
     try {
       const response = await fetch(`${apiUrl}/${entityId}`, {
         method: 'PUT',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedData),
@@ -40,9 +42,15 @@ export const createEntityAPI = async (apiUrl, entityData) => {
     }
   };
   
-  export const fetchEntityAPI = async (apiUrl) => {
+  export const fetchEntityAPI = async (apiUrl, token) => {
     try {
-      const response = await fetch(apiUrl);
+      const response = await fetch(apiUrl, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+  
       if (!response.ok) {
         throw new Error('Failed to fetch entities');
       }
@@ -52,12 +60,16 @@ export const createEntityAPI = async (apiUrl, entityData) => {
     }
   };
   
-  export const deleteEntityAPI = async (apiUrl, entityId) => {
+  export const deleteEntityAPI = async (apiUrl, entityId, token) => {
     try {
       const response = await fetch(`${apiUrl}/${entityId}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to delete entity');
       }

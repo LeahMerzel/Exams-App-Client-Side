@@ -10,25 +10,25 @@ import GetAllUsers from '../users/GetAllUsers';
 import GetUserData from '../users/GetUserData';
 
 const AdminDashboard = () => {
-  const { user, userLoggedIn } = useUser();
+  const { token, user, userLoggedIn } = useUser();
 
   return (
     <div>
     <Container className="align-items-center mt-3 mb-5 p-3">
       <h3>Admin Dashboard</h3>
       <h4>My Info</h4>
-      <GetUserData forUser={user}/>
+      <GetUserData token={token} forUser={user}/>
       {userLoggedIn && (
         <>
           <h4>All App Users:</h4>
-          <GetAllUsers />
-          <CreateNewUser />
+          <GetAllUsers token={token}/>
+          <CreateNewUser token={token}/>
           <h4>All App Exams</h4>
-          <GetAllExams />
-          <CreateNewExam />
+          <GetAllExams token={token}/>
+          <CreateNewExam token={token}/>
           <h4>All App Courses</h4>
-          <GetAllCourses />
-          <CreateNewCourse />
+          <GetAllCourses token={token}/>
+          <CreateNewCourse token={token}/>
         </>
       )}
     </Container>
