@@ -9,6 +9,7 @@ const FormField = ({ label, type, value, onChange, options }) => {
         <input type={type} onChange={(e) => onChange(e.target.files[0])} />
       ) : type === "select" ? (
         <Form.Select value={value} onChange={onChange}>
+          
           {options?.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -62,7 +63,7 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
             <FormField
               key={field.name}
               label={field.label}
-              type={field.type} // Correctly pass the type prop
+              type={field.type} 
               value={formData[field.name] || ""}
               onChange={(e) => handleChange(e, field.name)}
               options={field.options}

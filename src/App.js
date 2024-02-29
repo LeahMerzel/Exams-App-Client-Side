@@ -14,6 +14,9 @@ import Footer from './components/layout/Footer';
 import Container from 'react-bootstrap/Container';
 import Login from './components/auth/Login'; 
 import Register from './components/auth/Register';
+import AdminHome from './components/pages/AdminHome';
+import TeacherHome from './components/pages/TeacherHome';
+import StudentHome from './components/pages/StudentHome';
 
 const App = () => {
   return (
@@ -32,6 +35,9 @@ const App = () => {
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
             <Route path="/student-dashboard" element={<StudentDashboard />} />
+            <Route path="/admin-home" element={<AdminHome />} />
+            <Route path="/teacher-home" element={<TeacherHome />} />
+            <Route path="/student-home" element={<StudentHome />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFoundPage />} />

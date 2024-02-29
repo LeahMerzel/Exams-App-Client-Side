@@ -6,12 +6,16 @@ import backgroundImage from '../images/homePage/graphic-design-color-swatches-pe
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const handleLoginClick = () => {
-    navigate('/login');
+  const handleTeacherClick = () => {
+    navigate('/teacher-home');
   };
 
-  const handleRegisterClick = () => {
-    navigate('/register');
+  const handleStudentClick = () => {
+    navigate('/student-home');
+  };
+
+  const handleAdminClick = () => {
+    navigate('/admin-home');
   };
 
   return (
@@ -26,9 +30,11 @@ const HomePage = () => {
       <Container className="align-items-center p-3" style={{ zIndex: 1 }}>
         <h3>Get Started</h3>
         <p>
-          <Button variant="primary" style={{ border: '1px solid #007bff', marginRight: '10px' }} onClick={handleLoginClick}>Login</Button>{' '}
+          <Button variant="primary" style={{ border: '1px solid #007bff', marginRight: '10px' }} onClick={handleTeacherClick}>I'm a Teacher</Button>{' '}
           or{' '}
-          <Button variant="primary" style={{ border: '1px solid #007bff', marginLeft: '10px' }} onClick={handleRegisterClick}>Register</Button>.
+          <Button variant="primary" style={{ border: '1px solid #007bff', marginRight: '10px' }} onClick={handleStudentClick}>I'm a Student</Button>{' '}
+          or{' '}
+          <Button onClick={handleAdminClick} style={{ background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer' }}>I'm the Admin</Button>        
         </p>
         <p style={{ position: 'absolute', bottom: 60, right: 30 }}>
           Background image by{' '}

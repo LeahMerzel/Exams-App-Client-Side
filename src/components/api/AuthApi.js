@@ -1,7 +1,7 @@
 // AuthApi.js
 
 const registerAndLoginUser = async (userData) => {
-  const response = await fetch('/api/Auth/register', {
+  const response = await fetch('https://localhost:7252/api/Auth/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -13,13 +13,12 @@ const registerAndLoginUser = async (userData) => {
     throw new Error('Failed to register user');
   }
 
-  authenticateUser(userData);
-  
-  return response.json();
+  const loginResponse = await authenticateUser(userData);
+  return loginResponse;
 };
 
 const authenticateUser = async (userData) => {
-  const response = await fetch('/api/Auth/login', {
+  const response = await fetch('https://localhost:7252/api/Auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -34,11 +33,11 @@ const authenticateUser = async (userData) => {
   const responseData = await response.json();
   const { token, refreshToken } = responseData; 
   saveTokenToLocalStorage(token);
-  return { userData, token, refreshToken };
+  return responseData;
 };
 
 const fetchUserData = async (userId, token) => {
-  const response = await fetch(`/api/Auth/get-user/${userId}`, {
+  const response = await fetch(`https://localhost:7252/api/Auth/get-user/${userId}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',

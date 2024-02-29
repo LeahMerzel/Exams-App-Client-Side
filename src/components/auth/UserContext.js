@@ -16,12 +16,12 @@ export const UserProvider = ({ children }) => {
       setUser(response);
       setUserLoggedIn(true);
       setToken(response.token)
-      const additionalUserData = await fetchUserData(response.id);
-      // Do something with additional user data
+      // const additionalUserData = await fetchUserData(response.userId, response.token);
       toast.success('Login successful!');
+      return { userLoggedIn: true, user: response};
     } catch (error) {
       console.error('Error logging in:', error.message);
-      toast.error('Login failed. Please try again.!');
+      toast.error('Login failed. Please try again.');
     }
   };
 
@@ -45,21 +45,21 @@ export const UserProvider = ({ children }) => {
   };
 
 
-  const additionalUserData = async () => {
-    if (user) {
-      try {
-        const additionalUserData = await fetchUserData(user.id);
-        return additionalUserData;
-      } catch (error) {
-        throw new Error('Error fetching additional user data:', error.message);
-      }
-    } else {
-      throw new Error('User is not logged in');
-    }
-  };
+  // const additionalUserData = async () => {
+  //   if (user) {
+  //     try {
+  //       const additionalUserData = await fetchUserData(user.id);
+  //       return additionalUserData;
+  //     } catch (error) {
+  //       throw new Error('Error fetching additional user data:', error.message);
+  //     }
+  //   } else {
+  //     throw new Error('User is not logged in');
+  //   }
+  // };
 
   return (
-    <UserContext.Provider value={{ token, user, userLoggedIn, login, logout, register, additionalUserData }}>
+    <UserContext.Provider value={{ token, user, userLoggedIn, login, logout, register}}> 
       {children}
     </UserContext.Provider>
   );

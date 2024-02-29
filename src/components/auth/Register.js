@@ -6,43 +6,42 @@ import { Container, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Register = () => {
+const Register = ({userRole}) => {
   const navigate = useNavigate();
-  const { register, user, isLoading } = useUser();
+  const { register, isLoading } = useUser();
   const [error, setError] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
   const fields = [
-    { name: 'fullName', label: 'Full Name', type: 'text' },
-    { name: 'username', label: 'Username', type: 'text' },
-    { name: 'password', label: 'Password', type: 'password' },
-    { name: 'email', label: 'Email Address', type: 'email' },
-    { name: 'phoneNumber', label: 'Phone Number', type: 'text' },
-    { name: 'role', label: 'User Role', type: 'select', options: ['teacher', 'student'] },
-    { name: "image", label: "Upload Image", type: "file" }
+    { name: 'UserName', label: 'Username', type: 'text' },
+    { name: 'FullName', label: 'Full Name', type: 'text' },
+    { name: 'PasswordHash', label: 'Password', type: 'password' },
+    { name: 'Email', label: 'Email Address', type: 'email' },
+    // { name: 'phoneNumber', label: 'Phone Number', type: 'text' },
+    { name: "ProfileImagePath", label: "Upload Image", type: "file" },
+    { name: 'UserRole', type: 'hidden', value: userRole }
   ];
 
   const handleSubmit = async (formData) => {
-    const formDataWithImage = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      formDataWithImage.append(key, value);
-    });
-    formDataWithImage.append("image", imageFile);
+    // const formDataWithImage = new FormData();
+    // Object.entries(formData).forEach(([key, value]) => {
+    //   formDataWithImage.append(key, value);
+    // });
+    // formDataWithImage.append("image", imageFile);
     try {
-      const response = await register(formDataWithImage);
+      const response = await register(formData);
       setImageFile(null);
       if (response.userLoggedIn) {
-        const { role } = user;
-        if (role === 'admin') {
+        if (userRole === 0) {
           navigate('/admin-dashboard');
-        } else if (role === 'teacher') {
+        } else if (userRole === 1) {
           navigate('/teacher-dashboard');
-        } else if (role === 'student') {
+        } else if (userRole === 2) {
           navigate('/student-dashboard');
         } else {
           navigate('/');
         }
-        toast.success('Registration successful!');
+          toast.success('Registration successful!');
       } else {
         setError('Registration failed. Please try again.');
         toast.error('Registration failed. Please try again.');
@@ -56,7 +55,7 @@ const Register = () => {
 
   return (
     <div>
-      <Container className="align-items-center mt-3 mb-5 p-3">
+      <Container className="align-items-center mt-0 mb-5 p-3">
         {isLoading && <Spinner animation="border" />}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <Form fields={fields} onSubmit={handleSubmit} entityName="Register" />
