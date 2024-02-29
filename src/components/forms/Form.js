@@ -39,7 +39,7 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
     setFormVisible(false);
   };
 
-  const handleCancle = () => {
+  const handleCancel = () => {
     setFormData({});
     setFormVisible(false);
   };
@@ -70,13 +70,17 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
             />
           ))}
           <br />
-          <Button type="submit">
+          <Button type="submit" >
             {entityName === "Login" || entityName === "Register"
               ? ""
               : "Submit"}{" "}
             {entityName}
           </Button>
-          <Button onClick={handleCancle} className="ms-2" >Cancle</Button>
+          {entityName !== "Login" && entityName !== "Register" && (
+            <Button onClick={handleCancel} className="ms-2">
+              Cancel
+            </Button>
+          )}
         </BootstrapForm>
         {typeof onRender === "function" && onRender()}
       </Container>

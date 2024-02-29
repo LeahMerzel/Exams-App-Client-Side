@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from './UserContext';
 import Form from '../forms/Form';
 import { Container, Spinner } from 'react-bootstrap';
@@ -19,17 +19,18 @@ const Register = ({userRole}) => {
     { name: 'Email', label: 'Email Address', type: 'email' },
     // { name: 'phoneNumber', label: 'Phone Number', type: 'text' },
     { name: "ProfileImagePath", label: "Upload Image", type: "file" },
-    { name: 'UserRole', type: 'hidden', value: userRole }
   ];
 
   const handleSubmit = async (formData) => {
+    const formDataWithUserRole = { ...formData, UserRole: userRole };
+    console.log(formDataWithUserRole);
     // const formDataWithImage = new FormData();
     // Object.entries(formData).forEach(([key, value]) => {
     //   formDataWithImage.append(key, value);
     // });
     // formDataWithImage.append("image", imageFile);
     try {
-      const response = await register(formData);
+      const response = await register(formDataWithUserRole);
       setImageFile(null);
       if (response.userLoggedIn) {
         if (userRole === 0) {
@@ -55,14 +56,10 @@ const Register = ({userRole}) => {
 
   return (
     <div>
-      <Container className="align-items-center mt-0 mb-5 p-3">
+      <Container className="align-items-center">
         {isLoading && <Spinner animation="border" />}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <Form fields={fields} onSubmit={handleSubmit} entityName="Register" />
-        <p>
-          Already have an account? {' '}
-          <Link to="/login">Login Here</Link>
-        </p>
       </Container>
     </div>
   );

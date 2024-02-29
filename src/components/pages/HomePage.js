@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/homePage/graphic-design-color-swatches-pens-desk-architectural-drawing-with-work-tools-accessories.jpg';
-
 const HomePage = () => {
   const navigate = useNavigate();
 

@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from './UserContext';
 import Form from '../forms/Form';
 import { Container, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Login = ({userRole}) => {
+const Login = ({ userRole }) => {
   const navigate = useNavigate();
   const { login, isLoading } = useUser();
   const [error, setError] = useState(null);
 
   const handleSubmit = async (formData) => {
+    const formDataWithUserRole = { ...formData, UserRole: userRole };
     try {
-      const response = await login(formData);
-      if(response){
+      const response = await login(formDataWithUserRole);
+      if (response) {
         if (userRole === 0) {
           navigate('/admin-dashboard');
         } else if (userRole === 1) {
@@ -25,7 +26,7 @@ const Login = ({userRole}) => {
           navigate('/');
         }
         toast.success('Login successful!');
-        }
+      }
     } catch (error) {
       console.error('Login failed:', error.message);
       setError('Login failed. Please try again.');
@@ -34,19 +35,15 @@ const Login = ({userRole}) => {
 
   const fields = [
     { name: 'Email', label: 'Email', type: 'email' },
-    { name: 'PasswordHash', label: 'Password', type: 'password' }
+    { name: 'PasswordHash', label: 'Password', type: 'password' },
   ];
 
   return (
     <div>
-      <Container className="align-items-center mt-0 mb-5 p-3">
+      <Container className="align-items-center">
         {isLoading && <Spinner animation="border" />}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <Form fields={fields} onSubmit={handleSubmit} entityName="Login" />
-        <p>
-          Don't have an account? {' '}
-          <Link to="/register">Register Here</Link>      
-        </p>
       </Container>
     </div>
   );
