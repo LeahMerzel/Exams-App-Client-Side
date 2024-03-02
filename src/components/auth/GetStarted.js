@@ -3,7 +3,7 @@ import { Container, Button } from 'react-bootstrap';
 import Login from './Login';
 import Register from './Register';
 
-const GetStarted = ({ userRole }) => {
+const GetStarted = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
@@ -33,8 +33,8 @@ const GetStarted = ({ userRole }) => {
           <Button variant="primary" style={{ border: '1px solid #007bff', marginLeft: '10px' }} onClick={handleRegisterClick}>Register</Button>.
         </p>
       )}
-      {showLogin && <Login userRole={userRole} />}
-      {showRegister && <Register userRole={userRole} />}
+      {showLogin && <Login />}
+      {showRegister && <Register />}
       {(showLogin || showRegister) && (
         <p className=' mt-2 mb-5'>
           <Button variant="link" onClick={handleGoBack}>Go back</Button>

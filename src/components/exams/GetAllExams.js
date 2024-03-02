@@ -6,18 +6,23 @@ import DataTable from "../filterableTable/DataTable";
 import SearchBar from '../filterableTable/SearchBar';
 import UpdateExam from './UpdateExam';
 import GetSubmitedExams from "./GetSubmitedExams";
+import { useUser } from '../auth/UserContext';
 
 const GetAllExams = ({token, id}) => {
-    let getAllExamsApiUrl = id ? `https://localhoast:7252/api/Teacher/${id}/exams` : "https://localhost:7252/api/Exam/get-all";
+  const { userRole } = useUser();
+  const getAllExamsApiUrl = userRole === 0
+  ? "https://localhost:7252/api/Exam/get-all"
+  : `https://localhoast:7252/api/Teacher/${id}/exams`;
+  
     const { data: exams, isLoading, error } = useFetch(token, getAllExamsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(exams || []);
 
     const handleEdit = (item) => {
-      <UpdateExam item={item} />;
+      return <UpdateExam item={item} />;
     };
   
     const onGetSubmitted = (exam) => {
-      <GetSubmitedExams examId={exam.id} />;
+      return <GetSubmitedExams examId={exam.id} />;
     };
 
     return (

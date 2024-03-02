@@ -4,9 +4,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './components/auth/UserContext';
 import Header from './components/layout/Header';
-import AdminDashboard from './components/pages/AdminDashboard';
-import TeacherDashboard from './components/pages/TeacherDashboard';
-import StudentDashboard from './components/pages/StudentsDashboard';
+import AdminDashboard from './components/pages/dashboards/AdminDashboard';
+import TeacherDashboard from './components/pages/dashboards/TeacherDashboard';
+import StudentDashboard from './components/pages/dashboards/StudentsDashboard';
 import HomePage from './components/pages/HomePage'
 import AboutPage from './components/pages/AboutPage'; 
 import ContactPage from './components/pages/ContactPage'; 

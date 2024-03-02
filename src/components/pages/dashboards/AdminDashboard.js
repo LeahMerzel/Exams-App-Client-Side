@@ -1,13 +1,13 @@
 import React from 'react';
-import GetAllExams from '../exams/GetAllExams';
-import GetAllCourses from '../courses/GetAllCourses';
-import { useUser } from '../auth/UserContext';
-import CreateNewCourse from '../courses/CreateNewCourse';
-import CreateNewExam from '../exams/CreateNewExam';
-import CreateNewUser from '../users/CreateNewUser';
+import GetAllExams from '../../exams/GetAllExams';
+import GetAllCourses from '../../courses/GetAllCourses';
+import { useUser } from '../../auth/UserContext';
+import CreateNewCourse from '../../courses/CreateNewCourse';
+import CreateNewExam from '../../exams/CreateNewExam';
+import CreateNewUser from '../../users/CreateNewUser';
 import { Container } from 'react-bootstrap';
-import GetAllUsers from '../users/GetAllUsers';
-import GetUserData from '../users/GetUserData';
+import GetAllUsers from '../../users/GetAllUsers';
+import GetUserData from '../../users/GetUserData';
 
 const AdminDashboard = () => {
   const { token, user, userLoggedIn } = useUser();

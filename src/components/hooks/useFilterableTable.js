@@ -1,4 +1,3 @@
-// useFilterableTable.js
 import { useState } from "react";
 
 function useFilterableTable(initialData) {
@@ -13,7 +12,7 @@ function useFilterableTable(initialData) {
     });
   };
 
-  const filteredData = initialData.filter((item) =>
+  const filteredData = (initialData || []).filter((item) =>
     filterFunction(item, filterText) || filterText.trim() === ''
   );
 
@@ -25,4 +24,3 @@ function useFilterableTable(initialData) {
 }
 
 export default useFilterableTable;
-

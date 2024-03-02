@@ -1,14 +1,21 @@
 import React, { createContext, useState, useContext } from 'react';
-import { authenticateUser, fetchUserData, registerAndLoginUser } from '../api/AuthApi'; 
+import { authenticateUser, fetchUserData, registerUser } from '../api/AuthApi'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState();
   const [userLoggedIn, setUserLoggedIn] = useState(false); 
   const [token, setToken] = useState();
+  const [userRole, setUserRole] = useState();
+  
+  const setRole = async (role) => {
+    setUserRole(role);
+  }
 
   const login = async (userData) => {
     try {
@@ -16,6 +23,15 @@ export const UserProvider = ({ children }) => {
       setUser(response);
       setUserLoggedIn(true);
       setToken(response.token)
+      if (userRole === "Admin") {
+        navigate('/admin-dashboard');
+      } else if (userRole === "Teacher") {
+        navigate('/teacher-dashboard');
+      } else if (userRole === "Student") {
+        navigate('/student-dashboard');
+      } else {
+        navigate('/');
+      }
       // const additionalUserData = await fetchUserData(response.userId, response.token);
       toast.success('Login successful!');
       return { userLoggedIn: true, user: response};
@@ -32,17 +48,21 @@ export const UserProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await registerAndLoginUser(userData);
-      setUser(response);
-      setUserLoggedIn(true);
-      toast.success('Registered successfully!');
-      return { userLoggedIn: true, user: response };
+      const response = await registerUser(userData);
+      const { Email, PasswordHash } = userData;
+      if (response) {
+        toast.success('Registered successfully!');
+        await login({ Email, PasswordHash });
+      }
+      // setUser(response);
+      // setUserLoggedIn(true);
+      // return { userLoggedIn: true, user: response };
     } catch (error) {
       console.error('Error registering user:', error.message);
       toast.error('Registration failed. Please try again.');
       return { userLoggedIn: false, user: null };
     }
-  };
+  };  
 
 
   // const additionalUserData = async () => {
@@ -59,7 +79,7 @@ export const UserProvider = ({ children }) => {
   // };
 
   return (
-    <UserContext.Provider value={{ token, user, userLoggedIn, login, logout, register}}> 
+    <UserContext.Provider value={{ setRole, userRole, token, user, userLoggedIn, login, logout, register}}> 
       {children}
     </UserContext.Provider>
   );

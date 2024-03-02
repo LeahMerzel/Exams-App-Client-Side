@@ -10,7 +10,7 @@ const CreateNewExam = ({token, id}) => {
     const [questionsOrderRandom, setQuestionsOrderRandom] = useState(false); 
 
     const fields = [
-        { name: "examTeacherId", label: "Exam Teacher Id", type: id },
+        { name: "examTeacherId", label: "Exam Teacher Id", type: id? id: "text" },
         { name: "examName", label: "Exam Name", type: "text" },
         { name: "examDescription", label: "Exam Description", type: "text" },
         { name: "course", label: "Course", type: "select", options: [] },

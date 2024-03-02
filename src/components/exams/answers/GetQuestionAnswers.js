@@ -12,7 +12,7 @@ const GetQuestionAnswers = ({question}) => {
     const { filterText, setFilterText, filteredData } = useFilterableTable(answers || []);
 
     const handleEdit = (item) => {
-      <UpdateAnswer item={item} />;
+      return <UpdateAnswer item={item} />;
     };
   
     return (

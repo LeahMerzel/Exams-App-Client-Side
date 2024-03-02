@@ -1,6 +1,6 @@
 // AuthApi.js
 
-const registerAndLoginUser = async (userData) => {
+const registerUser = async (userData) => {
   const response = await fetch('https://localhost:7252/api/Auth/register', {
     method: 'POST',
     headers: {
@@ -12,9 +12,7 @@ const registerAndLoginUser = async (userData) => {
   if (!response.ok) {
     throw new Error('Failed to register user');
   }
-
-  const loginResponse = await authenticateUser(userData);
-  return loginResponse;
+  return response.json();
 };
 
 const authenticateUser = async (userData) => {
@@ -53,4 +51,4 @@ const saveTokenToLocalStorage = (token) => {
   localStorage.setItem('token', token);
 };
 
-export { registerAndLoginUser, authenticateUser, fetchUserData };
+export { registerUser, authenticateUser, fetchUserData };

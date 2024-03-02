@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUser } from '../auth/UserContext';
 import useFetch from '../hooks/useFetch';
 import Button from 'react-bootstrap/Button';
@@ -7,38 +7,39 @@ import useFilterableTable from "../hooks/useFilterableTable";
 import UpdateUser from './UpdateUser';
 import { Spinner, Alert } from "react-bootstrap";
 
-const GetUserData = ({token, forUser}) => {
-  const { user, login, logout } = useUser(forUser);
-  const getUserDataApiUrl = `https://localhost:7252/api/Auth/get-user/${user.Id}`;
-  const { data: userData, isLoading, error } = useFetch(token, getUserDataApiUrl);
+const GetUserData = () => {
+  const { user, logout, token } = useUser();
+  const getUserDataApiUrl = user ? `https://localhost:7252/api/Auth/get-user/${user.userId}` : null;
+  const { data: userData, isLoading, error, fetchData } = useFetch(token);
+
+  useEffect(() => {
+    if (user && getUserDataApiUrl) {
+      fetchData(getUserDataApiUrl);
+    }
+  }, [user, getUserDataApiUrl, fetchData]);
+
   const { filteredData } = useFilterableTable(userData || []);
 
   const handleEdit = (item) => {
-    <UpdateUser item={item} />;
+    return <UpdateUser item={item} />;
   };
 
-return (
+  return (
     <div>
       {isLoading && <Spinner animation="border" />}
       {error && <Alert variant="danger">Error: {error}</Alert>}
-      {user ? 
+      {user && (
         <>
           <h2>Welcome, {user.userName}!</h2>
           <p>User Details:</p>
-            {userData && (
+          {userData && (
             <div>
-            <DataTable data={filteredData} onEdit={handleEdit} />
+              <DataTable data={filteredData} onEdit={handleEdit} />
             </div>
-            )
-          }
+          )}
           <Button onClick={logout}>Logout</Button>
         </>
-        : (
-        <div>
-        <p>Please login to view user details.</p>
-        <Button onClick={() => login(user)}>Login</Button>
-        </div>
-      )}
+      )} 
     </div>
   );
 };
