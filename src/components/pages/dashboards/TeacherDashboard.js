@@ -8,22 +8,23 @@ import { Container } from 'react-bootstrap';
 import GetAllUsers from '../../users/GetAllUsers';
 
 const TeacherDashboard = () => {
-  const { token, user, userLoggedIn } = useUser();
+  const { userLoggedIn } = useUser();
 
   return (
     <div>
       <Container className="align-items-center mt-3 mb-5 p-3">
         <h3>Teacher Dashboard</h3>
-        <h4>My Info</h4>
-        <GetUserData />
         {userLoggedIn && (
           <>
+            <h4>My Info</h4>
+            <GetUserData />
             <h4>My Exams:</h4>
             <GetAllExams />
             <h4>Create New Exam</h4>
             <CreateNewExam />
             <h4>My Students:</h4>
-            <GetAllUsers />
+            <GetAllUsers courseId={userLoggedIn.courseId}/>  {/* -------------------do this in reality */}
+
             <h4>The Courses I Teach In</h4>
             <GetAllCourses />
           </>

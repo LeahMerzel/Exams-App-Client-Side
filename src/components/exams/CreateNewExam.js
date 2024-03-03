@@ -3,14 +3,15 @@ import { Spinner, Alert } from "react-bootstrap";
 import useCreate from "../hooks/useCreate";
 import Form from "../forms/Form";
 import CreateNewQuestion from "./questions/CreateNewQuestion";
+import { useUser } from "../auth/UserContext";
 
-const CreateNewExam = ({token, id}) => {
+const CreateNewExam = () => {
+    const {user, token} = useUser();
     const createExamApiUrl = "https://localhost:7252/api/Exam/create";
-    const { createEntity, isLoading, error } = useCreate(token, createExamApiUrl);
+    const { createEntity, isLoading, error } = useCreate(createExamApiUrl, token);
     const [questionsOrderRandom, setQuestionsOrderRandom] = useState(false); 
 
     const fields = [
-        { name: "examTeacherId", label: "Exam Teacher Id", type: id? id: "text" },
         { name: "examName", label: "Exam Name", type: "text" },
         { name: "examDescription", label: "Exam Description", type: "text" },
         { name: "course", label: "Course", type: "select", options: [] },
@@ -20,6 +21,7 @@ const CreateNewExam = ({token, id}) => {
     ];
 
     const onSubmit = async (formData) => {
+        formData.id = user.userId;
         formData.questionsOrderRandom = questionsOrderRandom;
         await createEntity(formData);
     };  

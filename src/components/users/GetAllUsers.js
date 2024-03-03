@@ -7,11 +7,11 @@ import UpdateUser from "./UpdateUser";
 import { Spinner, Alert } from "react-bootstrap";
 import { useUser } from '../auth/UserContext';
 
-const GetAllUsers = ({token, id}) => {
-    const { userRole } = useUser();
+const GetAllUsers = ({courseId}) => {
+    const { userRole, token} = useUser();
     const getAllUsersApiUrl = userRole === 0
     ? "https://localhost:7252/api/Auth/get-all"
-    : `https://localhost:7252/api/User/${id}/students`;  
+    : `https://localhost:7252/api/Course/${courseId}/course-students`;  
     
     const { data: users, isLoading, error } = useFetch(token, getAllUsersApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(users);

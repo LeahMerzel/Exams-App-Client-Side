@@ -1,43 +1,36 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUser } from '../auth/UserContext';
 import useFetch from '../hooks/useFetch';
 import Button from 'react-bootstrap/Button';
-import DataTable from '../filterableTable/DataTable';
-import useFilterableTable from "../hooks/useFilterableTable";
 import UpdateUser from './UpdateUser';
 import { Spinner, Alert } from "react-bootstrap";
 
 const GetUserData = () => {
   const { user, logout, token } = useUser();
-  const getUserDataApiUrl = user ? `https://localhost:7252/api/Auth/get-user/${user.userId}` : null;
-  const { data: userData, isLoading, error, fetchData } = useFetch(token);
+  const getUserDataApiUrl = `https://localhost:7252/api/Auth/get-user-data/${user.userId}`;
+  const { data: userData, isLoading, error } = useFetch(token, getUserDataApiUrl);
+  const [showUpdateUser, setShowUpdateUser] = useState(false);
 
-  useEffect(() => {
-    if (user && getUserDataApiUrl) {
-      fetchData(getUserDataApiUrl);
-    }
-  }, [user, getUserDataApiUrl, fetchData]);
-
-  const { filteredData } = useFilterableTable(userData || []);
-
-  const handleEdit = (item) => {
-    return <UpdateUser item={item} />;
+  const handleEdit = () => {
+    setShowUpdateUser(true);
   };
 
   return (
     <div>
       {isLoading && <Spinner animation="border" />}
       {error && <Alert variant="danger">Error: {error}</Alert>}
-      {user && (
+      {userData && (
         <>
-          <h2>Welcome, {user.userName}!</h2>
+          <h2>Welcome, {userData.userName}!</h2>
           <p>User Details:</p>
-          {userData && (
-            <div>
-              <DataTable data={filteredData} onEdit={handleEdit} />
-            </div>
+          <p>Username: {userData.userName}</p>
+          <p>Full Name: {userData.fullName}</p>
+          <p>Email: {userData.email}</p>
+          {!showUpdateUser && (
+          <Button onClick={handleEdit} style={{marginRight: '10px'}}>Edit User Details</Button>
           )}
           <Button onClick={logout}>Logout</Button>
+          {showUpdateUser && <UpdateUser userToUpdate={userData} />}
         </>
       )} 
     </div>

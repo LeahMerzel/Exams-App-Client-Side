@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useEffect} from 'react';
 import { fetchEntityAPI } from '../api/CrudApi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const useFetch = (apiUrl) => {
+const useFetch = (token, apiUrl) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const fetchedData = await fetchEntityAPI(apiUrl);
+      const fetchedData = await fetchEntityAPI(token, apiUrl);
       setData(fetchedData);
     } catch (error) {
       setError(error.message);
@@ -20,13 +20,13 @@ const useFetch = (apiUrl) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [apiUrl]);
 
   useEffect(() => {
     fetchData();
-  }, [apiUrl]);
+  }, [fetchData]);
 
-  return { data, isLoading, error, fetchData };
+  return { data, isLoading, error};
 };
 
 export default useFetch;

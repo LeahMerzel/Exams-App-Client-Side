@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useUser } from './UserContext';
 import Form from '../forms/Form';
 import { Container, Spinner } from 'react-bootstrap';
@@ -7,7 +6,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
-  const navigate = useNavigate();
   const { userRole, register, isLoading} = useUser();
   console.log(userRole);
   const [error, setError] = useState(null);

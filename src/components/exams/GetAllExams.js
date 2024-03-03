@@ -8,11 +8,12 @@ import UpdateExam from './UpdateExam';
 import GetSubmitedExams from "./GetSubmitedExams";
 import { useUser } from '../auth/UserContext';
 
-const GetAllExams = ({token, id}) => {
-  const { userRole } = useUser();
+const GetAllExams = () => {
+  const {user, token, userRole } = useUser();
+  console.log(user);
   const getAllExamsApiUrl = userRole === 0
   ? "https://localhost:7252/api/Exam/get-all"
-  : `https://localhoast:7252/api/Teacher/${id}/exams`;
+  : `https://localhost:7252/api/User/${user.userId}/teacher-exams`;
   
     const { data: exams, isLoading, error } = useFetch(token, getAllExamsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(exams || []);

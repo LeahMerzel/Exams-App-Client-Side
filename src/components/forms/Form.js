@@ -48,7 +48,7 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
     setFormVisible(true);
   };
 
-  if (!formVisible && entityName !== "Login" && entityName !== "Register") {
+  if (!formVisible && entityName !== "Login" && entityName !== "Register" && entityName !== "Update") {
     return (
       <Button onClick={handleCreateNew}>Create New {entityName}</Button>
     );
@@ -71,7 +71,7 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
           ))}
           <br />
           <Button type="submit" >
-            {entityName === "Login" || entityName === "Register"
+            {entityName === "Login" || entityName === "Register" || entityName === "Update"
               ? ""
               : "Submit"}{" "}
             {entityName}

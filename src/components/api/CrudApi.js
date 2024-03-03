@@ -1,5 +1,4 @@
 // CrudApi.js
-
 export const createEntityAPI = async (apiUrl, entityData, token) => {
     try {
       const response = await fetch(apiUrl, {
@@ -21,15 +20,15 @@ export const createEntityAPI = async (apiUrl, entityData, token) => {
     }
   };
   
-  export const updateEntityAPI = async (apiUrl, entityId, updatedData, token) => {
+  export const updateEntityAPI = async (apiUrl, entityToUpdate, token) => {
     try {
-      const response = await fetch(`${apiUrl}/${entityId}`, {
+      const response = await fetch(apiUrl, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(entityToUpdate), 
       });
   
       if (!response.ok) {
@@ -41,10 +40,11 @@ export const createEntityAPI = async (apiUrl, entityData, token) => {
       throw new Error(error.message);
     }
   };
-  
-  export const fetchEntityAPI = async (apiUrl, token) => {
+    
+  export const fetchEntityAPI = async (token, apiUrl) => {
     try {
       const response = await fetch(apiUrl, {
+      method: 'GET',  
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',

@@ -7,18 +7,21 @@ import SearchBar from '../filterableTable/SearchBar';
 import UpdateCourse from "./UpdateCourse";
 import { useUser } from '../auth/UserContext';
 
-const GetAllCourses = ({token, id}) => {
-    const { userRole } = useUser();
-    const getAllCoursesApiUrl = userRole === 0
-    ? "https://localhost:7252/api/Course/get-all"
-    : `https://localhoast:7252/api/User/${id}/courses`;  
-    
+const GetAllCourses = () => {
+    const { userRole, token, user } = useUser();
+    let getAllCoursesApiUrl = `https://localhost:7252/api/User/${user.userId}/student-courses`;
+    if (userRole === 0) {
+      getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
+    } else if (userRole === 1) {
+      getAllCoursesApiUrl = `https://localhost:7252/api/User/${user.userId}/teacher-courses`;
+    }       
     const { data: courses, isLoading, error } = useFetch(token, getAllCoursesApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(courses || []);
 
     const handleEdit = (item) => {
       return <UpdateCourse item={item} />;
     };
+  
   
     return (
       <div>
@@ -33,5 +36,6 @@ const GetAllCourses = ({token, id}) => {
       </div>
     );
   };
+
   
   export default GetAllCourses;
