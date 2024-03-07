@@ -9,17 +9,15 @@ import { useUser } from '../auth/UserContext';
 
 const GetAllCourses = () => {
     const { userRole, token, user } = useUser();
-    let getAllCoursesApiUrl = `https://localhost:7252/api/User/${user.userId}/student-courses`;
+    let getAllCoursesApiUrl = `https://localhost:7252/api/User/${user.userId}/user-courses`;
     if (userRole === 0) {
       getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
-    } else if (userRole === 1) {
-      getAllCoursesApiUrl = `https://localhost:7252/api/User/${user.userId}/teacher-courses`;
-    }       
-    const { data: courses, isLoading, error } = useFetch(token, getAllCoursesApiUrl);
+    }      
+    const { data: courses, isLoading, error } = useFetch(getAllCoursesApiUrl, token);
     const { filterText, setFilterText, filteredData } = useFilterableTable(courses || []);
 
     const handleEdit = (item) => {
-      return <UpdateCourse item={item} />;
+      return <UpdateCourse courseId={item} />;
     };
   
   

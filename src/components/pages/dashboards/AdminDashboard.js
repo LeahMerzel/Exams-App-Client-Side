@@ -5,9 +5,10 @@ import { useUser } from '../../auth/UserContext';
 import CreateNewCourse from '../../courses/CreateNewCourse';
 import CreateNewExam from '../../exams/CreateNewExam';
 import CreateNewUser from '../../users/CreateNewUser';
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import GetAllUsers from '../../users/GetAllUsers';
 import GetUserData from '../../users/GetUserData';
+import GetCourseUsers from '../../courses/GetCourseUsers';
 
 const AdminDashboard = () => {
   const { token, user, userLoggedIn } = useUser();
@@ -15,20 +16,41 @@ const AdminDashboard = () => {
   return (
     <div>
     <Container className="align-items-center mt-3 mb-5 p-3">
-      <h3>Admin Dashboard</h3>
-      <h4>My Info</h4>
-      <GetUserData token={token} forUser={user}/>
-      {userLoggedIn && (
+      <Row>
+        <Col><h3>Admin Dashboard</h3></Col>
+      </Row>
+      <Row>
+        <Col><h4>My Info</h4>
+        <GetUserData />
+        </Col>
+      </Row>
+      {!userLoggedIn && (
         <>
-          <h4>All App Users:</h4>
+        <Row>
+          <Col><h4>All App Users:</h4>
           <GetAllUsers token={token}/>
-          <CreateNewUser token={token}/>
+          </Col>
+          <Col><CreateNewUser token={token}/></Col>
+          </Row>
+          <Row>
+            <Col><h4>App's Users By Course</h4>
+            <GetCourseUsers />
+            </Col>
+          </Row>
+          <Row>
+          <Col>
           <h4>All App Exams</h4>
           <GetAllExams token={token}/>
-          <CreateNewExam token={token}/>
+          </Col>
+          <Col><CreateNewExam token={token}/></Col>
+        </Row>
+        <Row>
+          <Col>
           <h4>All App Courses</h4>
           <GetAllCourses token={token}/>
-          <CreateNewCourse token={token}/>
+          </Col>
+          <Col><CreateNewCourse token={token}/></Col>
+        </Row>
         </>
       )}
     </Container>

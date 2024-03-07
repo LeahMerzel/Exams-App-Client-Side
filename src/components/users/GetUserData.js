@@ -6,9 +6,9 @@ import UpdateUser from './UpdateUser';
 import { Spinner, Alert } from "react-bootstrap";
 
 const GetUserData = () => {
-  const { user, logout, token } = useUser();
-  const getUserDataApiUrl = `https://localhost:7252/api/Auth/get-user-data/${user.userId}`;
-  const { data: userData, isLoading, error } = useFetch(token, getUserDataApiUrl);
+  const { user, logout} = useUser();
+  const getUserDataApiUrl = user.userId ? `https://localhost:7252/api/Auth/getUser/${user.userId}` : '';
+  const { data: userData, isLoading, error } = useFetch(getUserDataApiUrl);
   const [showUpdateUser, setShowUpdateUser] = useState(false);
 
   const handleEdit = () => {

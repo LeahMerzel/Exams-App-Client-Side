@@ -9,21 +9,20 @@ import GetSubmitedExams from "./GetSubmitedExams";
 import { useUser } from '../auth/UserContext';
 
 const GetAllExams = () => {
-  const {user, token, userRole } = useUser();
-  console.log(user);
-  const getAllExamsApiUrl = userRole === 0
+  const {user, userRole } = useUser();
+  const getAllExamsApiUrl = userRole === "Admin"
   ? "https://localhost:7252/api/Exam/get-all"
   : `https://localhost:7252/api/User/${user.userId}/teacher-exams`;
   
-    const { data: exams, isLoading, error } = useFetch(token, getAllExamsApiUrl);
+    const { data: exams, isLoading, error } = useFetch(getAllExamsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(exams || []);
 
     const handleEdit = (item) => {
-      return <UpdateExam item={item} />;
+      return <UpdateExam examId={item} />;
     };
   
-    const onGetSubmitted = (exam) => {
-      return <GetSubmitedExams examId={exam.id} />;
+    const onGetSubmitted = (item) => {
+      return <GetSubmitedExams examId={item} />;
     };
 
     return (

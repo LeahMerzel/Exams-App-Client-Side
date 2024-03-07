@@ -1,12 +1,11 @@
 import React, { useState} from "react";
-import useUpdate from "../hooks/useUpdate";
-import Form from "../forms/Form";
+import useUpdate from "../../hooks/useUpdate";
+import Form from '../../forms/Form';
 import { Spinner, Alert } from "react-bootstrap";
 
-const UpdateAnswer = ({item}) => {
+const UpdateAnswer = (answerId) => {
     const updateAnswerApiUrl = "https://localhost:7252/api/Answer/update";
     const { updateEntity, isLoading, error } = useUpdate(updateAnswerApiUrl);
-    const [imageFile, setImageFile] = useState(null); 
     const [ answerIsCorrect, setAnswerIsCorrect] = useState(false);
 
     const fields = [
@@ -16,13 +15,9 @@ const UpdateAnswer = ({item}) => {
       ];
 
     const onSubmit = async (formData) => {
-        const formDataWithImage = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-            formDataWithImage.append(key, value);
-        });
-        formDataWithImage.append("image", imageFile);
-        await updateEntity(item.id, formDataWithImage);
-        setImageFile(null);
+        formData.id = answerId;
+        formData.answerIsCorrect = answerIsCorrect;
+        await updateEntity(formData);
     };
 
 

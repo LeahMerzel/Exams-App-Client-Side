@@ -1,13 +1,15 @@
 // CrudApi.js
-export const createEntityAPI = async (apiUrl, entityData, token) => {
+
+export const createEntityAPI = async (apiUrl) => {
     try {
       const response = await fetch(apiUrl, {
+
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(entityData),
+        body: JSON.stringify(),
       });
   
       if (!response.ok) {
@@ -20,12 +22,14 @@ export const createEntityAPI = async (apiUrl, entityData, token) => {
     }
   };
   
-  export const updateEntityAPI = async (apiUrl, entityToUpdate, token) => {
+  export const updateEntityAPI = async (apiUrl, entityToUpdate) => {
+    console.log("update", apiUrl, entityToUpdate)
     try {
       const response = await fetch(apiUrl, {
+
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(entityToUpdate), 
@@ -41,12 +45,13 @@ export const createEntityAPI = async (apiUrl, entityData, token) => {
     }
   };
     
-  export const fetchEntityAPI = async (token, apiUrl) => {
+  export const fetchEntityAPI = async (apiUrl) => {
     try {
       const response = await fetch(apiUrl, {
+
       method: 'GET',  
       headers: {
-        'Authorization': `Bearer ${token}`,
+        // 'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -60,12 +65,13 @@ export const createEntityAPI = async (apiUrl, entityData, token) => {
     }
   };
   
-  export const deleteEntityAPI = async (apiUrl, entityId, token) => {
+  export const deleteEntityAPI = async (apiUrl) => {
     try {
-      const response = await fetch(`${apiUrl}/${entityId}`, {
+      const response = await fetch(apiUrl, {
+
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });

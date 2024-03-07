@@ -2,6 +2,22 @@ import React, { useState } from "react";
 import { Button, Form as BootstrapForm, Container, Form } from "react-bootstrap";
 
 const FormField = ({ label, type, value, onChange, options }) => {
+
+  // const FormField = ({ label, type, value, onChange, options, regex }) => {
+  //   const [error, setError] = useState(null);
+  
+  //   const handleInputChange = (e) => {
+  //     const inputValue = e.target.value;
+  //     if (regex && inputValue && !regex.test(inputValue)) {
+  //       setError(`Invalid ${label}`);
+  //     } else {
+  //       setError(null);
+  //     }
+  //     onChange(inputValue);
+  //   };
+
+
+
   return (
     <div>
       <BootstrapForm.Label>{label}</BootstrapForm.Label>
@@ -22,6 +38,7 @@ const FormField = ({ label, type, value, onChange, options }) => {
     </div>
   );
 };
+
 
 const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
   const [formData, setFormData] = useState({});
@@ -67,6 +84,8 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
               value={formData[field.name] || ""}
               onChange={(e) => handleChange(e, field.name)}
               options={field.options}
+              //              regex={field.regex} // Pass the regex pattern to FormField
+
             />
           ))}
           <br />

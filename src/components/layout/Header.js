@@ -6,7 +6,7 @@ import Logo from '../images/logo/logo.jpg';
 
 const Header = () => {
   return (
-    <Navbar bg="light" variant="light">
+    <Navbar bg="light" variant="light" >
     <Container className="d-flex align-items-center">
       <Link to="/" className="mr-auto">
         <img

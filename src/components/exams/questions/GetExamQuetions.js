@@ -1,18 +1,18 @@
 import React from "react";
-import useFetch from "../hooks/useFetch";
-import useFilterableTable from "../hooks/useFilterableTable";
-import DataTable from "../filterableTable/DataTable";
-import SearchBar from '../filterableTable/SearchBar';
-import UpdateQuestion from "./UpdateQuestion";
+import useFetch from "../../hooks/useFetch";
+import useFilterableTable from "../../hooks/useFilterableTable";
+import DataTable from "../../filterableTable/DataTable";
+import SearchBar from "../../filterableTable/SearchBar";
+import UpdateQuestion from './UpdateQuestion';
 import { Spinner, Alert } from "react-bootstrap";
 
-const GetExamQuetions = ({exam}) => {
-    const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${exam.id}/questions`;
+const GetExamQuetions = (examId) => {
+    const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${examId}/questions`;
     const { data: questions, isLoading, error } = useFetch(getExamQuestionsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(questions || []);
 
     const handleEdit = (item) => {
-      <UpdateQuestion item={item} />;
+      <UpdateQuestion questionId={item} />;
     };
   
     return (

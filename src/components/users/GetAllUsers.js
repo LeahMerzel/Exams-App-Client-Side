@@ -5,19 +5,14 @@ import DataTable from "../filterableTable/DataTable";
 import SearchBar from '../filterableTable/SearchBar';
 import UpdateUser from "./UpdateUser";
 import { Spinner, Alert } from "react-bootstrap";
-import { useUser } from '../auth/UserContext';
 
-const GetAllUsers = ({courseId}) => {
-    const { userRole, token} = useUser();
-    const getAllUsersApiUrl = userRole === 0
-    ? "https://localhost:7252/api/Auth/get-all"
-    : `https://localhost:7252/api/Course/${courseId}/course-students`;  
-    
-    const { data: users, isLoading, error } = useFetch(token, getAllUsersApiUrl);
+const GetAllUsers = () => {
+    const getAllUsersApiUrl = "https://localhost:7252/api/Auth/get-all";
+    const { data: users, isLoading, error } = useFetch(getAllUsersApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(users);
 
     const handleEdit = (item) => {
-        return <UpdateUser item={item} />;
+        return <UpdateUser userId={item} />;
     };
   
     return (

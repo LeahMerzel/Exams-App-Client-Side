@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import useFetch from "../hooks/useFetch";
 import GetUpcomingExams from '../exams/GetUpcomingExams';
-import { Button } from "react-bootstrap";
+import { Button, Alert, Spinner} from "react-bootstrap";
 
 const GetStudentCourses = ({ token, studentId }) => {
-    const getStudentCoursesApiUrl = `https://localhost:7252/api/User/${studentId}/courses`;
-    const { data: studentCourses, isLoading, error } = useFetch(token, getStudentCoursesApiUrl);
+    const getStudentCoursesApiUrl = `https://localhost:7252/api/User/${studentId}/student-courses`;
+    const { data: studentCourses, isLoading, error } = useFetch(getStudentCoursesApiUrl, token);
     const [ getUpcomingExams, setGetUpcomingExams ] = useState(false);
 
     return (
         <div>
-            {isLoading && <p>Loading...</p>}
-            {error && <p>Error: {error}</p>}
+        {isLoading && <Spinner animation="border" />}
+        {error && <Alert variant="danger">Error: {error}</Alert>}
             {studentCourses && (
                 <div>
                     {studentCourses.map(course => (

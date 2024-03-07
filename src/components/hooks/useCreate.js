@@ -3,16 +3,16 @@ import { createEntityAPI } from '../api/CrudApi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const useCreate = (apiUrl, token) => {
+const useCreate = (apiUrl) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const createEntity = async (entityData) => {
+  const createEntity = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const createdEntity = await createEntityAPI(apiUrl, entityData, token);
+      const createdEntity = await createEntityAPI(apiUrl);
       setIsLoading(false);
       toast.success('Entity created successfully!');
       return createdEntity;

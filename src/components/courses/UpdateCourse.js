@@ -3,10 +3,9 @@ import useUpdate from "../hooks/useUpdate";
 import { Spinner, Alert } from "react-bootstrap";
 import Form from "../forms/Form";
 
-const UpdateCourse = ({item}) => {
+const UpdateCourse = ({courseId}) => {
     const updateCourseApiUrl = "https://localhost:7252/api/Course/update";
     const { updateEntity, isLoading, error } = useUpdate(updateCourseApiUrl);
-    const [imageFile, setImageFile] = useState(null); 
 
     const fields = [
         { name: "courseName", label: "Course Name", type: "text" },
@@ -19,13 +18,8 @@ const UpdateCourse = ({item}) => {
       ];
 
     const onSubmit = async (formData) => {
-        const formDataWithImage = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-            formDataWithImage.append(key, value);
-        });
-        formDataWithImage.append("image", imageFile);
-        await updateEntity(item.id, formDataWithImage);
-        setImageFile(null);
+        formData.id = courseId;
+        await updateEntity(formData);
     };
 
 

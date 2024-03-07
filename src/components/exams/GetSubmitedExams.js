@@ -6,16 +6,13 @@ import SearchBar from '../filterableTable/SearchBar';
 import { Spinner, Alert } from "react-bootstrap";
 import { useUser } from '../auth/UserContext';
 
-const GetSubmitedExams = ({ token, studentId, examId}) => {
-    let getAllStudenExamsApiUrl;
+const GetSubmitedExams = (entityId) => {
     const { userRole } = useUser();
-    if (userRole === 1){
-      getAllStudenExamsApiUrl = `https://localhost:7252/api/StudentExam/${examId}/submitted-student-exams`;
-    }
-    else if (userRole === 2){
-      getAllStudenExamsApiUrl = `https://localhost:7252/api/User/${studentId}/submitted-exams`;
-    }
-    const { data: submitedExams, isLoading, error } = useFetch(token, getAllStudenExamsApiUrl || '');
+    let getAllStudenExamsApiUrl = userRole ==="Teacher" 
+    ? `https://localhost:7252/api/Exam/${entityId}/submitted-student-exams`
+    : `https://localhost:7252/api/User/${entityId}/submitted-exams`;
+
+    const { data: submitedExams, isLoading, error } = useFetch(getAllStudenExamsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(submitedExams || []);
   
     return (

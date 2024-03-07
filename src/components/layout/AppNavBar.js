@@ -15,13 +15,13 @@ const AppNavBar = () => {
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
             <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
-            {userRole === 0 && (
+            {userRole === "Admin" && (
             <Nav.Link as={Link} to="/admin-dashboard">Admin Dashboard</Nav.Link>
             )}
-            {userRole === 1 && (
+            {userRole === "Teacher" && (
             <Nav.Link as={Link} to="/teacher-dashboard">Teacher Dashboard</Nav.Link>
             )}
-            {userRole === 2 && (
+            {userRole === "Student" && (
             <Nav.Link as={Link} to="/student-dashboard">Student Dashboard</Nav.Link>
             )}
           </Nav>

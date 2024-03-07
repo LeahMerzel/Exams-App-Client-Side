@@ -4,11 +4,12 @@ import Form from "../../forms/Form";
 import CreateNewAnswer from '../answers/CreateNewAnswer';
 import { Spinner, Alert } from "react-bootstrap";
 
-const CreateNewQuestion = () => {
-    const createQuestionApiUrl = "https://localhost:7256/api/Question";
+const CreateNewQuestion = (examId) => {
+    const createQuestionApiUrl = "https://localhost:7256/api/Question/create";
     const { createEntity, isLoading, error  } = useCreate(createQuestionApiUrl);
     const [ questionIsImage, setQuestionIsImage] = useState(false);
     const [ answersOrderRandom, setAnswersOrderRandom] = useState(false); 
+    const [questionId, setQuestionId] = useState();
   
     const fields = [
         { name: "questionNumber", label: "Question Number", type: "number" },
@@ -16,17 +17,18 @@ const CreateNewQuestion = () => {
         { name: "questionIsImage", label: "Set Question to Image", type: "checkbox", checked: questionIsImage, onChange: () => setQuestionIsImage(!questionIsImage) }, 
         { name: "answersOrder", label: "Set Answers Order to Random", type: "checkbox", checked: answersOrderRandom, onChange: () => setAnswersOrderRandom(!answersOrderRandom) }, 
         { name: "questionScoring", label: "Question Scoring", type: "number" },
-        { name: "exam", label: "Exam", type: "select", options: [] },
       ];
       
     const onSubmit = async (formData) => {
-        console.log("Form data:", formData);
-        await createEntity(formData);
+      formData.examId = examId;
+      formData.answersOrderRandom = answersOrderRandom
+      const response = await createEntity(formData);
+      setQuestionId(response.id);
     };
 
     const handleFormRender = () => {
       return(
-          <CreateNewAnswer />
+          <CreateNewAnswer questionId={questionId} />
       );
   };
 

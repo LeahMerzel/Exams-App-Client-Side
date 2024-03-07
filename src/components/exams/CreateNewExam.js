@@ -6,10 +6,11 @@ import CreateNewQuestion from "./questions/CreateNewQuestion";
 import { useUser } from "../auth/UserContext";
 
 const CreateNewExam = () => {
-    const {user, token} = useUser();
+    const {user} = useUser();
     const createExamApiUrl = "https://localhost:7252/api/Exam/create";
-    const { createEntity, isLoading, error } = useCreate(createExamApiUrl, token);
+    const { createEntity, isLoading, error } = useCreate(createExamApiUrl);
     const [questionsOrderRandom, setQuestionsOrderRandom] = useState(false); 
+    const [examId, setExamId] = useState();
 
     const fields = [
         { name: "examName", label: "Exam Name", type: "text" },
@@ -23,12 +24,13 @@ const CreateNewExam = () => {
     const onSubmit = async (formData) => {
         formData.id = user.userId;
         formData.questionsOrderRandom = questionsOrderRandom;
-        await createEntity(formData);
+        const response = await createEntity(formData);
+        setExamId(response.id);
     };  
 
     const handleFormRender = () => {
         return(
-            <CreateNewQuestion />
+            <CreateNewQuestion examId={examId}/>
         );
     };
 

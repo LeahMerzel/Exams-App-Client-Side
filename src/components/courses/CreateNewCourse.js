@@ -5,8 +5,8 @@ import Form from "../forms/Form";
 
 const CreateNewCourse = ({token}) => {
     const createCourseApiUrl = "https://localhost:7252/api/Course/create";
-    const { createEntity, isLoading, error  } = useCreate(token, createCourseApiUrl);
-  
+      const { createEntity, isLoading, error  } = useCreate(token, createCourseApiUrl);
+
     const fields = [
         { name: "courseName", label: "Course Name", type: "text" },
         { name: "courseDescription", label: "Course Description", type: "text" },

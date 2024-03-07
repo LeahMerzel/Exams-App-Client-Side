@@ -6,24 +6,25 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
-  const { login, isLoading } = useUser();
+  const { login, isLoading, getAdditionalUserData } = useUser();
   const [error, setError] = useState(null);
 
   const handleSubmit = async (formData) => {
     try {
       const response = await login(formData);
       if (response) {
+        console.log("in login comp",response)
         toast.success('Login successful!');
       }
     } catch (error) {
       console.error('Login failed:', error.message);
-      setError('Login failed. Please try again.');
-    }
+      setError(error.message || 'Login failed. Please try again.');
+    }    
   };
 
   const fields = [
     { name: 'Email', label: 'Email', type: 'email' },
-    { name: 'PasswordHash', label: 'Password', type: 'password' },
+    { name: 'Password', label: 'Password', type: 'password' },
   ];
 
   return (

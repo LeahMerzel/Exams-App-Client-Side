@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authenticateUser, fetchUserData, registerUser } from '../api/AuthApi'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,20 +9,35 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState();
-  const [userLoggedIn, setUserLoggedIn] = useState(false); 
-  const [token, setToken] = useState();
-  const [userRole, setUserRole] = useState();
+  const [additionalUserData, setAdditionalUserData] = useState();
+  const [userLoggedIn, setUserLoggedIn] = useState(); 
+  // const [token, setToken] = useState();
+  const [userRole, setUserRole] = useState(null);
+  const [userCourse, setUserCourse] = useState([]);
   
   const setRole = async (role) => {
     setUserRole(role);
   }
 
+  const setCourse = async (course) => {
+    if (!userCourse.includes(course)) {
+      setUserCourse([...userCourse, course]);
+    }else{
+      alert ("user is already in course");
+    }
+  };
+  
+  // Function to remove a course from the user's courses
+  const removeCourse = async (course) => {
+    setUserCourse(userCourse.filter(c => c !== course));
+  };
   const login = async (userData) => {
     try {
       const response = await authenticateUser(userData);
-      setUser(response);
+      console.log("this is userloggedinResponse",response);
       setUserLoggedIn(true);
-      setToken(response.token)
+      setUser(response);
+      // setToken(response.token)
       if (userRole === "Admin") {
         navigate('/admin-dashboard');
       } else if (userRole === "Teacher") {
@@ -32,11 +47,9 @@ export const UserProvider = ({ children }) => {
       } else {
         navigate('/');
       }
-      // const additionalUserData = await fetchUserData(response.userId, response.token);
       toast.success('Login successful!');
-      return { userLoggedIn: true, user: response};
-    } catch (error) {
-      console.error('Error logging in:', error.message);
+      return response;
+    } catch{
       toast.error('Login failed. Please try again.');
     }
   };
@@ -49,37 +62,35 @@ export const UserProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await registerUser(userData);
-      const { Email, PasswordHash } = userData;
       if (response) {
+        const { Email, Password } = userData;
+        if (!userLoggedIn) {
+          await login({ Email, Password });
+        }
         toast.success('Registered successfully!');
-        await login({ Email, PasswordHash });
       }
-      // setUser(response);
-      // setUserLoggedIn(true);
-      // return { userLoggedIn: true, user: response };
     } catch (error) {
       console.error('Error registering user:', error.message);
       toast.error('Registration failed. Please try again.');
-      return { userLoggedIn: false, user: null };
     }
-  };  
-
-
-  // const additionalUserData = async () => {
-  //   if (user) {
-  //     try {
-  //       const additionalUserData = await fetchUserData(user.id);
-  //       return additionalUserData;
-  //     } catch (error) {
-  //       throw new Error('Error fetching additional user data:', error.message);
-  //     }
-  //   } else {
-  //     throw new Error('User is not logged in');
-  //   }
-  // };
+  };
+  
+  const getAdditionalUserData = async (id) => {
+    if (user) {
+      try {
+        const getAdditionalUserData = await fetchUserData(id);
+        setAdditionalUserData(getAdditionalUserData);
+        return getAdditionalUserData;
+      } catch (error) {
+        throw new Error('Error fetching additional user data:', error.message);
+      }
+    } else {
+      throw new Error('User is not logged in');
+    }
+  };
 
   return (
-    <UserContext.Provider value={{ setRole, userRole, token, user, userLoggedIn, login, logout, register}}> 
+    <UserContext.Provider value={{removeCourse, additionalUserData, getAdditionalUserData, setCourse, userCourse, setRole, userRole, user, userLoggedIn, login, logout, register}}> 
       {children}
     </UserContext.Provider>
   );

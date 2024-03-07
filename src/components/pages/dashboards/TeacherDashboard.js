@@ -5,7 +5,8 @@ import GetUserData from '../../users/GetUserData';
 import { useUser } from '../../auth/UserContext';
 import CreateNewExam from '../../exams/CreateNewExam';
 import { Container } from 'react-bootstrap';
-import GetAllUsers from '../../users/GetAllUsers';
+import AddUserToCourse from '../../courses/AddUserToCourse';
+import GetCourseUsers from '../../courses/GetCourseUsers';
 
 const TeacherDashboard = () => {
   const { userLoggedIn } = useUser();
@@ -16,6 +17,8 @@ const TeacherDashboard = () => {
         <h3>Teacher Dashboard</h3>
         {userLoggedIn && (
           <>
+            <h4>Add Teacher To Course</h4>
+            <AddUserToCourse />
             <h4>My Info</h4>
             <GetUserData />
             <h4>My Exams:</h4>
@@ -23,8 +26,7 @@ const TeacherDashboard = () => {
             <h4>Create New Exam</h4>
             <CreateNewExam />
             <h4>My Students:</h4>
-            <GetAllUsers courseId={userLoggedIn.courseId}/>  {/* -------------------do this in reality */}
-
+            <GetCourseUsers /> 
             <h4>The Courses I Teach In</h4>
             <GetAllCourses />
           </>
