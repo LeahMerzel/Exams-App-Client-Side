@@ -5,6 +5,7 @@ import DataTable from "../../filterableTable/DataTable";
 import SearchBar from '../../filterableTable/SearchBar';
 import UpdateAnswer from './UpdateAnswer';
 import { Spinner, Alert } from "react-bootstrap";
+import RemoveAnswer from "./RemoveAnswer";
 
 const GetQuestionAnswers = (questionId) => {
     const getQuestionAnswersApiUrl = `https://localhost:7252/api/Question/${questionId}/answers`;
@@ -14,6 +15,10 @@ const GetQuestionAnswers = (questionId) => {
     const handleEdit = (item) => {
       return <UpdateAnswer answerId={item} />;
     };
+
+    const handleDelete = (item) => {
+      return <RemoveAnswer answerId={item} />
+    };
   
     return (
       <div>
@@ -22,7 +27,7 @@ const GetQuestionAnswers = (questionId) => {
         {answers && (
           <div>
             <SearchBar filterText={filterText} setFilterText={setFilterText} />
-            <DataTable data={filteredData} onEdit={handleEdit} />
+            <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete}/>
           </div>
         )}
       </div>

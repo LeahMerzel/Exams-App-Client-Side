@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useFetch from "../hooks/useFetch";
 import { Spinner, Alert, Form, Button } from "react-bootstrap";
 import { useUser } from "../auth/UserContext";
-import useDelete from "../hooks/useDelete"; // Import the useDelete hook
+import useDelete from "../hooks/useDelete"; 
 
 const RemoveUserFromCourse = () => {
   const { user } = useUser();

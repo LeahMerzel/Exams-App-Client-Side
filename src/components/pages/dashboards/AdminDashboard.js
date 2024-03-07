@@ -28,9 +28,9 @@ const AdminDashboard = () => {
         <>
         <Row>
           <Col><h4>All App Users:</h4>
-          <GetAllUsers token={token}/>
+          <GetAllUsers />
           </Col>
-          <Col><CreateNewUser token={token}/></Col>
+          <Col><CreateNewUser /></Col>
           </Row>
           <Row>
             <Col><h4>App's Users By Course</h4>
@@ -40,16 +40,16 @@ const AdminDashboard = () => {
           <Row>
           <Col>
           <h4>All App Exams</h4>
-          <GetAllExams token={token}/>
+          <GetAllExams />
           </Col>
-          <Col><CreateNewExam token={token}/></Col>
+          <Col><CreateNewExam /></Col>
         </Row>
         <Row>
           <Col>
           <h4>All App Courses</h4>
-          <GetAllCourses token={token}/>
+          <GetAllCourses />
           </Col>
-          <Col><CreateNewCourse token={token}/></Col>
+          <Col><CreateNewCourse /></Col>
         </Row>
         </>
       )}

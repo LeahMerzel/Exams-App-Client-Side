@@ -25,10 +25,10 @@ const TeacherDashboard = () => {
             <GetAllExams />
             <h4>Create New Exam</h4>
             <CreateNewExam />
-            <h4>My Students:</h4>
-            <GetCourseUsers /> 
             <h4>The Courses I Teach In</h4>
             <GetAllCourses />
+            <h4>My Students:</h4>
+            <GetCourseUsers /> 
           </>
         )}
       </Container>

@@ -5,6 +5,7 @@ import DataTable from "../filterableTable/DataTable";
 import SearchBar from '../filterableTable/SearchBar';
 import UpdateUser from "./UpdateUser";
 import { Spinner, Alert } from "react-bootstrap";
+import RemoveUser from "./RemoveUser";
 
 const GetAllUsers = () => {
     const getAllUsersApiUrl = "https://localhost:7252/api/Auth/get-all";
@@ -14,6 +15,10 @@ const GetAllUsers = () => {
     const handleEdit = (item) => {
         return <UpdateUser userId={item} />;
     };
+
+    const handleDelete = (item) => {
+        return <RemoveUser userId={item}/>
+    };
   
     return (
         <div>
@@ -22,7 +27,7 @@ const GetAllUsers = () => {
             {users && (
                 <div>
                     <SearchBar filterText={filterText} setFilterText={setFilterText} />
-                    <DataTable data={filteredData} onEdit={handleEdit} />
+                    <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
                 </div>
             )}
         </div>

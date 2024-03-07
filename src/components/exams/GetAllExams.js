@@ -7,6 +7,7 @@ import SearchBar from '../filterableTable/SearchBar';
 import UpdateExam from './UpdateExam';
 import GetSubmitedExams from "./GetSubmitedExams";
 import { useUser } from '../auth/UserContext';
+import RemoveExam from "./RemoveExam";
 
 const GetAllExams = () => {
   const {user, userRole } = useUser();
@@ -25,6 +26,10 @@ const GetAllExams = () => {
       return <GetSubmitedExams examId={item} />;
     };
 
+    const handleDelete = (item) => {
+      return <RemoveExam examId={item}/>
+    };
+
     return (
         <div>
           {isLoading && <Spinner animation="border" />}
@@ -32,7 +37,7 @@ const GetAllExams = () => {
           {exams && (
             <div>
               <SearchBar filterText={filterText} setFilterText={setFilterText} />
-              <DataTable data={filteredData} onEdit={handleEdit} onGetSubmitted={onGetSubmitted}/>
+              <DataTable data={filteredData} onEdit={handleEdit} onGetSubmitted={onGetSubmitted} onDelete={handleDelete}/>
             </div>
           )}
         </div>
