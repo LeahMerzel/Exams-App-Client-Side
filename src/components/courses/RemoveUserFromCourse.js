@@ -6,21 +6,22 @@ import useDelete from "../hooks/useDelete";
 
 const RemoveUserFromCourse = () => {
   const { user } = useUser();
-  const getUserCoursesApiUrl = `https://localhost:7252/api/User/${user.userId}/user-courses`;
+  const getUserCoursesApiUrl = `https://localhost:7252/api/User/${user.id}/user-courses`;
   const {
     data: userCourses,
     isLoading: coursesLoading,
     error: fetchError,
   } = useFetch(getUserCoursesApiUrl);
+  console.log("user Courses:", user.userCourses)
 
   const [selectedCourse, setSelectedCourse] = useState("");
   const [removeUserFromCourseUrl, setRemoveUserFromCourseUrl] = useState("");
 
   useEffect(() => {
-    if (selectedCourse && user) {
-      setRemoveUserFromCourseUrl(`https://localhost:7252/api/Course/remove-user-from-course/${selectedCourse.id},${user.userId}`);
+    if (selectedCourse && user.id) {
+      setRemoveUserFromCourseUrl(`https://localhost:7252/api/Course/remove-user-from-course/${selectedCourse.id},${user.id}`);
     }
-  }, [selectedCourse, user]);
+  }, [selectedCourse, user.id]);
 
   const {
     deleteEntity,

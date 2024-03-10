@@ -7,6 +7,8 @@ import SearchBar from '../filterableTable/SearchBar';
 import UpdateCourse from "./UpdateCourse";
 import { useUser } from '../auth/UserContext';
 import RemoveCourse from "./RemoveCourse";
+import GetUpcomingExams from "../exams/GetUpcomingExams";
+import GetCourseExams from './GetCourseExams';
 
 const GetAllCourses = () => {
     const { userRole, user } = useUser();
@@ -24,6 +26,14 @@ const GetAllCourses = () => {
     const handleDelete = (item) => {
       return <RemoveCourse courseId={item}/>
     };
+
+    const handleGetCourseUpcomingExams = (item) => {
+      return <GetUpcomingExams courseId={item}/>
+    };
+    
+    const handleGetCourseExams = (item) => {
+      return <GetCourseExams courseId={item}/>
+    };
   
     return (
       <div>
@@ -32,7 +42,8 @@ const GetAllCourses = () => {
         {courses && (
           <div>
             <SearchBar filterText={filterText} setFilterText={setFilterText} />
-            <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
+            <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} 
+            onCourseExams={userRole === "Student"? handleGetCourseUpcomingExams : handleGetCourseExams}/>
           </div>
         )}
       </div>

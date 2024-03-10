@@ -4,9 +4,9 @@ import { Spinner, Alert } from "react-bootstrap";
 import Form from "../forms/Form";
 import useFetch from "../hooks/useFetch";
 
-const CreateNewCourse = ({token}) => {
+const CreateNewCourse = () => {
     const createCourseApiUrl = "https://localhost:7252/api/Course/create";
-      const { createEntity, isLoading: createLoading, error: createError  } = useCreate(token, createCourseApiUrl);
+      const { createEntity, isLoading: createLoading, error: createError  } = useCreate(createCourseApiUrl);
 
       const [courseUsers, setCourseUsers] = useState([]);
       const [exams, setExams] = useState([]);

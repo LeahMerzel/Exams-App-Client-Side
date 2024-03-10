@@ -24,7 +24,7 @@ const GetCourseUsers = () => {
         const fetchUsers = async () => {
             try {
                 setIsLoading(true);
-                const promises = userCourse.map(course => fetchUsersForCourse(course));
+                const promises = userCourse?.map(course => fetchUsersForCourse(course));
                 await Promise.all(promises);
                 setIsLoading(false);
             } catch (error) {

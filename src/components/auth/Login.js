@@ -24,7 +24,7 @@ const Login = () => {
 
   const fields = [
     { name: 'Email', label: 'Email', type: 'email' },
-    { name: 'Password', label: 'Password', type: 'password' },
+    { name: 'PasswordHash', label: 'Password', type: 'password' },
   ];
 
   return (

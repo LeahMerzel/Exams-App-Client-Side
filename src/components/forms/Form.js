@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form as BootstrapForm, Container, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom"; 
 
 const FormField = ({ label, type, value, onChange, options }) => {
 
@@ -24,14 +25,20 @@ const FormField = ({ label, type, value, onChange, options }) => {
       {type === "file" ? (
         <input type={type} onChange={(e) => onChange(e.target.files[0])} />
       ) : type === "select" ? (
-        <Form.Select value={value} onChange={onChange}>
-          
+        <BootstrapForm.Select value={value} onChange={onChange}>
           {options?.map((option) => (
             <option key={option} value={option}>
               {option}
             </option>
           ))}
-        </Form.Select>
+        </BootstrapForm.Select>
+      ) : type === "checkbox" ? (
+        <BootstrapForm.Check
+        type={type}
+        checked={value} // Ensure the checked state reflects the value
+        onChange={(e) => onChange(e.target.checked)}
+        label={label}
+      />
       ) : (
         <BootstrapForm.Control type={type} value={value} onChange={onChange} />
       )}
@@ -40,15 +47,17 @@ const FormField = ({ label, type, value, onChange, options }) => {
 };
 
 
-const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
+const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl }) => {
   const [formData, setFormData] = useState({});
   const [formVisible, setFormVisible] = useState(false);
+  const navigate = useNavigate(); 
 
   const handleChange = (e, fieldName) => {
-    const updatedFormData = { ...formData, [fieldName]: e.target.value };
+    const newValue = e.target ? (e.target.type === 'checkbox' ? e.target.checked : e.target.value) : '';
+    const updatedFormData = { ...formData, [fieldName]: newValue };
     setFormData(updatedFormData);
   };
-
+      
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
@@ -62,6 +71,7 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender }) => {
   };
 
   const handleCreateNew = () => {
+    navigate(newPageUrl);
     setFormVisible(true);
   };
 

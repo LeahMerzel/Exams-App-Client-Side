@@ -17,6 +17,9 @@ import Register from './components/auth/Register';
 import AdminHome from './components/pages/AdminHome';
 import TeacherHome from './components/pages/TeacherHome';
 import StudentHome from './components/pages/StudentHome';
+import TakeExam from './components/exams/TakeExam';
+import GetStarted from './components/auth/GetStarted';
+import CreateNewExam from './components/exams/CreateNewExam';
 
 const App = () => {
   
@@ -41,6 +44,9 @@ const App = () => {
             <Route path="/student-home" element={<StudentHome />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/get-started" element={<GetStarted />} />
+            <Route path="/take-exam" element={<TakeExam />} />
+            <Route path="/create-new-exam" element={<CreateNewExam />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

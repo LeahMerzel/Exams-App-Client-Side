@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import Table from 'react-bootstrap/Table';
 import Pagination from 'react-bootstrap/Pagination';
 import { Button } from "react-bootstrap";
+import { useUser } from "../auth/UserContext";
 
-function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, studentExam }) {
+function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCourseExams }) {
+  const {userRole} = useUser();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; 
 
@@ -36,14 +38,17 @@ function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, student
         <td key={i}>{String(value)}</td>
       ))}
       <td>
-        {!studentExam ? (
+        {!userRole === "Student" ? (
           <>
             <Button onClick={() => onEdit(item.id)}>Edit</Button>
             <Button onClick={() => onDelete(item.id)}>Delete</Button>
-            <Button onClick={() => onGetSubmitted(item.id)}>See Students' Submitted Exams</Button>
+            {onGetSubmitted && <Button onClick={() => onGetSubmitted(item.id)}>See Students' Submitted Exams</Button>}
           </>
         ) : (
-          <button onClick={() => onTakeExam(item)}>Take Exam</button>
+          <>
+          {onTakeExam && <Button onClick={() => onTakeExam(item.id)}>Take Exam</Button>}
+          {onCourseExams && <Button onClick={() => onCourseExams(item.id)}>See Course's Exams</Button>}
+          </>
         )}
       </td>
     </tr>

@@ -6,7 +6,7 @@ import { useUser } from "../auth/UserContext";
 import RemoveUserFromCourse from "./RemoveUserFromCourse";
 
 const AddUserToCourse = () => {
-  const { userCourse, setCourse, user } = useUser();
+  const { userCourses, setCourse, user } = useUser();
   const getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
   const {
     data: courses,
@@ -16,12 +16,13 @@ const AddUserToCourse = () => {
 
   const [selectedCourse, setSelectedCourse] = useState("");
   const [addUserToCourseUrl, setAddUserToCourseUrl] = useState("");
+  const [showRemoveUserModal, setShowRemoveUserModal] = useState(false);
 
   useEffect(() => {
-    if (selectedCourse && user) {
-      setAddUserToCourseUrl(`https://localhost:7252/api/Course/add-user-to-course/${selectedCourse},${user.userId}`);
+    if (selectedCourse && user.id) {
+      setAddUserToCourseUrl(`https://localhost:7252/api/Course/add-user-to-course/${selectedCourse},${user.id}`);
     }
-  }, [selectedCourse, user]);
+  }, [selectedCourse, user.id]);
 
   const {
     createEntity,
@@ -29,24 +30,24 @@ const AddUserToCourse = () => {
     error: createError,
   } = useCreate(addUserToCourseUrl);
 
-
   const handleAddUserToCourse = async () => {
     try {
       if (!user || !selectedCourse) {
         return;
       }
-      const response = await createEntity(addUserToCourseUrl);
+      const response = await createEntity(); // Since the URL is already set, no need to pass it again
       if (response){
-        setCourse(...userCourse, selectedCourse);
+        setSelectedCourse(response);
+        setCourse(selectedCourse); // Assuming setCourse is a function to set the user's course
       }
     } catch (error) {
       console.error("Error adding user to course: ", error);
     }
   };
-  
+
   const handleRemove = () => {
-    return <RemoveUserFromCourse />
-  }
+    setShowRemoveUserModal(true);
+  };
 
   return (
     <div>
@@ -83,9 +84,10 @@ const AddUserToCourse = () => {
           >
             Add User to Course
           </Button>
-          <p>Added to Course: ${userCourse}</p>
+          <p>Added to Course: {selectedCourse && selectedCourse.courseName}</p>
           <p>Want to Remove from Course?</p>
-          <Button onClick={handleRemove()}>Remove from Course</Button>
+          <Button onClick={handleRemove}>Remove from Course</Button>
+          {showRemoveUserModal && <RemoveUserFromCourse />}
         </div>
       )}
     </div>

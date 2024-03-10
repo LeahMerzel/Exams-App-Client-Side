@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useUser } from '../auth/UserContext';
 import useFetch from '../hooks/useFetch';
 import Button from 'react-bootstrap/Button';
@@ -7,7 +7,8 @@ import { Spinner, Alert } from "react-bootstrap";
 
 const GetUserData = () => {
   const { user, logout} = useUser();
-  const getUserDataApiUrl = user.userId ? `https://localhost:7252/api/Auth/getUser/${user.userId}` : '';
+  console.log("-------",user.id)
+  const getUserDataApiUrl = user ? `https://localhost:7252/api/Auth/getUser/${user.id}` : '';
   const { data: userData, isLoading, error } = useFetch(getUserDataApiUrl);
   const [showUpdateUser, setShowUpdateUser] = useState(false);
 

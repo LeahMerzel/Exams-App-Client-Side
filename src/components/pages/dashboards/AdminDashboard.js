@@ -11,7 +11,7 @@ import GetUserData from '../../users/GetUserData';
 import GetCourseUsers from '../../courses/GetCourseUsers';
 
 const AdminDashboard = () => {
-  const { token, user, userLoggedIn } = useUser();
+  const { userLoggedIn } = useUser();
 
   return (
     <div>
@@ -20,36 +20,45 @@ const AdminDashboard = () => {
         <Col><h3>Admin Dashboard</h3></Col>
       </Row>
       <Row>
-        <Col><h4>My Info</h4>
+        <Col xs={12} md={9} lg={9} className="mb-4">
+        <h4>Admin Data:</h4>
         <GetUserData />
         </Col>
       </Row>
       {!userLoggedIn && (
         <>
         <Row>
-          <Col><h4>All App Users:</h4>
+          <Col xs={12} md={9} lg={9} className="mb-4">
+          <h4>All App Users:</h4>
           <GetAllUsers />
           </Col>
-          <Col><CreateNewUser /></Col>
-          </Row>
-          <Row>
-            <Col><h4>App's Users By Course</h4>
+          <Col xs={12} md={3} lg={3} className="mb-4">
+            <CreateNewUser />
+          </Col>
+        </Row>
+        <Row>
+            <Col xs={12} md={9} lg={9} className="mb-4">
+            <h4>App's Users By Course</h4>
             <GetCourseUsers />
             </Col>
-          </Row>
-          <Row>
-          <Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={9} lg={9} className="mb-4">
           <h4>All App Exams</h4>
           <GetAllExams />
           </Col>
-          <Col><CreateNewExam /></Col>
+          <Col xs={12} md={3} lg={3} className="mb-4">
+          <CreateNewExam />
+          </Col>
         </Row>
         <Row>
-          <Col>
+          <Col xs={12} md={9} lg={9} className="mb-4">
           <h4>All App Courses</h4>
           <GetAllCourses />
           </Col>
-          <Col><CreateNewCourse /></Col>
+          <Col xs={12} md={3} lg={3} className="mb-4">
+          <CreateNewCourse />
+          </Col>
         </Row>
         </>
       )}
@@ -59,3 +68,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+

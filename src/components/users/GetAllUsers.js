@@ -17,7 +17,7 @@ const GetAllUsers = () => {
     };
 
     const handleDelete = (item) => {
-        return <RemoveUser userId={item}/>
+        return <RemoveUser userId={item} />
     };
   
     return (

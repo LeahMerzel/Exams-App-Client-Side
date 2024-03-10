@@ -4,7 +4,7 @@ import { Spinner, Alert } from "react-bootstrap";
 import Form from "../forms/Form";
 import useFetch from "../hooks/useFetch";
 
-const UpdateCourse = ({ courseId }) => {
+const UpdateCourse = ( courseId ) => {
     const updateCourseApiUrl = "https://localhost:7252/api/Course/update";
     const { updateEntity, isLoading: updateLoading, error: updateError } = useUpdate(updateCourseApiUrl);
 

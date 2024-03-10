@@ -4,61 +4,71 @@ import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/homePage/graphic-design-color-swatches-pens-desk-architectural-drawing-with-work-tools-accessories.jpg';
 import { useUser } from '../auth/UserContext';
 
-
 const HomePage = () => {
   const { userRole } = useUser();
-  console.log("this",userRole);
   const navigate = useNavigate();
 
   const handleTeacherClick = () => {
-    if (userRole === "Teacher" || userRole === null){
+    if (userRole === "Teacher" || userRole === null) {
       navigate('/teacher-home');
-    }else{
-      alert("you are not a teacher.");
+    } else {
+      alert("You are not a teacher.");
     }
   };
 
   const handleStudentClick = () => {
-    if (userRole === "Student" || userRole === null){
+    if (userRole === "Student" || userRole === null) {
       navigate('/student-home');
-    }else{
-      alert("you are not a student.")
+    } else {
+      alert("You are not a student.");
     }
   };
 
   const handleAdminClick = () => {
-    if (userRole === "Admin" || userRole === null){
+    if (userRole === "Admin" || userRole === null) {
       navigate('/admin-home');
-    }else{
-      alert("you are not the admin.")
+    } else {
+      alert("You are not the admin.");
     }
   };
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
       <img src={backgroundImage} alt="Background" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
-      <Container className="align-items-center mt-5 p-3" style={{ zIndex: 1 }}>
-        <h3>Welcome to Leah's Exams App!</h3>
-        <p>
-          This app is designed for teachers to create exams and for students to take them and get grades.
-        </p>
-      </Container>
-      <Container className="align-items-center p-3" style={{ zIndex: 1 }}>
-        <h3>Get Started</h3>
-        <p>
-          <Button variant="primary" style={{ border: '1px solid #007bff', marginRight: '10px' }} onClick={handleTeacherClick}>I'm a Teacher</Button>{' '}
-          or{' '}
-          <Button variant="primary" style={{ border: '1px solid #007bff', marginRight: '10px' }} onClick={handleStudentClick}>I'm a Student</Button>{' '}
-          or{' '}
-          <Button onClick={handleAdminClick} style={{ background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer' }}>I'm the Admin</Button>        
-        </p>
-        <p style={{ position: 'absolute', bottom: 60, right: 30 }}>
-          Background image by{' '}
-          <a href="https://www.freepik.com/free-photo/graphic-design-color-swatches-pens-desk-architectural-drawing-with-work-tools-accessories_1235467.htm#&position=34&from_view=search&track=ais&uuid=62dc3d97-0f07-46e6-a0f4-ca684aef3173">
-            ijeab
-          </a>{' '}
-          on Freepik
-        </p>
+      <Container className="p-3" style={{ zIndex: 1 }}>
+        <div className="text-left">
+          <h3>Welcome to Leah's Exams App!</h3>
+          <p>This app is designed for teachers to create exams and for students to take them and get grades.</p>
+        </div>
+        <div className="text-center mt-3 d-md-none">
+          <h3>Get Started</h3>
+          <p>
+            <Button variant="primary" style={{ marginRight: '10px' }} onClick={handleTeacherClick}>I'm a Teacher</Button>
+          </p>
+          <p>
+            <Button variant="primary" style={{ marginRight: '10px' }} onClick={handleStudentClick}>I'm a Student</Button>
+          </p>
+          <p>
+            <Button variant="primary" onClick={handleAdminClick}>I'm the Admin</Button>
+          </p>
+        </div>
+        <div className="text-left mt-3 d-none d-md-block">
+          <h3>Get Started</h3>
+          <p>
+            <Button variant="primary" style={{ marginRight: '10px' }} onClick={handleTeacherClick}>I'm a Teacher</Button>
+            <Button variant="primary" style={{ marginRight: '10px' }} onClick={handleStudentClick}>I'm a Student</Button>
+            <Button variant="primary" onClick={handleAdminClick}>I'm the Admin</Button>
+          </p>
+        </div>
+        <div className="text-right ">
+          <p style={{ marginBottom: 0 }}>
+            Background image by{' '}
+            <a href="https://www.freepik.com/free-photo/graphic-design-color-swatches-pens-desk-architectural-drawing-with-work-tools-accessories_1235467.htm#&position=34&from_view=search&track=ais&uuid=62dc3d97-0f07-46e6-a0f4-ca684aef3173">
+              ijeab
+            </a>{' '}
+            on Freepik
+          </p>
+        </div>
       </Container>
     </div>
   );
