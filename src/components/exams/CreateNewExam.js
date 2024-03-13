@@ -19,7 +19,7 @@ const CreateNewExam = () => {
       name: "course",
       label: "Course",
       type: "select",
-      options: userCourses.map((course) => course),
+      options: userCourses?.map((course) => course),
     },
     {
       name: "examDateTime",

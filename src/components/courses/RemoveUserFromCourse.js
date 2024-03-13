@@ -1,49 +1,46 @@
 import React, { useState, useEffect } from "react";
-import useFetch from "../hooks/useFetch";
 import { Spinner, Alert, Form, Button } from "react-bootstrap";
 import { useUser } from "../auth/UserContext";
-import useDelete from "../hooks/useDelete"; 
+import { deleteUserFromCourse } from "../api/CourseUsersApi";
+import { useUserCourses } from "./UserCoursesContext";
 
 const RemoveUserFromCourse = () => {
   const { user } = useUser();
-  const getUserCoursesApiUrl = `https://localhost:7252/api/User/${user.id}/user-courses`;
-  const {
-    data: userCourses,
-    isLoading: coursesLoading,
-    error: fetchError,
-  } = useFetch(getUserCoursesApiUrl);
-  console.log("user Courses:", user.userCourses)
-
+  const { userCourses , setCourseUsersChanged } = useUserCourses();
   const [selectedCourse, setSelectedCourse] = useState("");
-  const [removeUserFromCourseUrl, setRemoveUserFromCourseUrl] = useState("");
+  const [removedCourseName, setRemovedCourseName] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
-    if (selectedCourse && user.id) {
-      setRemoveUserFromCourseUrl(`https://localhost:7252/api/Course/remove-user-from-course/${selectedCourse.id},${user.id}`);
+    if (selectedCourse && userCourses) {
+      const selectedCourseObj = userCourses.find(course => course.id === selectedCourse);
+      if (selectedCourseObj) {
+        setRemovedCourseName(selectedCourseObj.courseName);
+      }
     }
-  }, [selectedCourse, user.id]);
-
-  const {
-    deleteEntity,
-    isLoading: deleteLoading,
-    error: deleteError,
-  } = useDelete(removeUserFromCourseUrl);
+  }, [selectedCourse, userCourses]);
 
   const handleRemoveUserFromCourse = async () => {
     try {
-      await deleteEntity();
-      setSelectedCourse(""); 
+      if (!user || !selectedCourse) {
+        return;
+      }
+      setDeleteLoading(true);
+      setDeleteError("");
+      await deleteUserFromCourse(selectedCourse, user.id);
+      setCourseUsersChanged(true);
+      setSelectedCourse("");
     } catch (error) {
-      console.error("Error removing user from course: ", error);
+      setDeleteError(error.message);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
   return (
     <div>
-      {coursesLoading && <Spinner animation="border" />}
-      {fetchError && (
-        <Alert variant="danger">Error fetching user courses: {fetchError}</Alert>
-      )}
+      {deleteLoading && <Spinner animation="border" />}
       {deleteError && (
         <Alert variant="danger">
           Error removing user from course: {deleteError}
@@ -52,7 +49,7 @@ const RemoveUserFromCourse = () => {
       {userCourses && (
         <div>
           <Form.Group controlId="selectCourse">
-            <Form.Label>Select a Course to Remove:</Form.Label>
+            <Form.Label>Select a Course:</Form.Label>
             <Form.Control
               as="select"
               onChange={(e) => setSelectedCourse(e.target.value)}
@@ -73,6 +70,7 @@ const RemoveUserFromCourse = () => {
           >
             {deleteLoading ? "Removing..." : "Remove User from Course"}
           </Button>
+          <p>Removed from Course: {removedCourseName}</p>
         </div>
       )}
     </div>

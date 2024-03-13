@@ -1,15 +1,21 @@
 import React from 'react';
 import GetAllExams from '../../exams/GetAllExams';
-import GetAllCourses from '../../courses/GetAllCourses';
 import GetUserData from '../../users/GetUserData';
 import { useUser } from '../../auth/UserContext';
 import CreateNewExam from '../../exams/CreateNewExam';
 import { Container, Row, Col } from 'react-bootstrap';
 import AddUserToCourse from '../../courses/AddUserToCourse';
 import GetCourseUsers from '../../courses/GetCourseUsers';
+import GetUserCourses from '../../users/GetUserCourses';
+import { useUserCourses } from '../../courses/UserCoursesContext';
 
 const TeacherDashboard = () => {
-  const { userCourses, userLoggedIn } = useUser();
+  const { userLoggedIn } = useUser();
+  const { userCourses } = useUserCourses();
+  
+  if (userCourses){
+    console.log("user courses", userCourses);
+  }
 
   return (
     <Container className="align-items-center mt-3 mb-5 p-3">
@@ -40,7 +46,7 @@ const TeacherDashboard = () => {
                   <Row>
                     <Col xs={12} md={9} lg={9} className="mb-4">
                       <h4>The Courses I Teach In</h4>
-                      <GetAllCourses />
+                      <GetUserCourses />
                     </Col>
                     <Col xs={12} md={3} lg={3} className="mb-4">
                       <h4>My Students:</h4>

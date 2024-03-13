@@ -7,8 +7,7 @@ import { Spinner, Alert } from "react-bootstrap";
 
 const GetUserData = () => {
   const { user, logout} = useUser();
-  console.log("-------",user.id)
-  const getUserDataApiUrl = user ? `https://localhost:7252/api/Auth/getUser/${user.id}` : '';
+  const getUserDataApiUrl = user ? `https://localhost:7252/api/Auth/user/${user.id}` : '';
   const { data: userData, isLoading, error } = useFetch(getUserDataApiUrl);
   const [showUpdateUser, setShowUpdateUser] = useState(false);
 

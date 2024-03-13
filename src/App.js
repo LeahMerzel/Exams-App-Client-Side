@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './components/auth/UserContext';
+import { UserCoursesProvider } from './components/courses/UserCoursesContext'; 
 import Header from './components/layout/Header';
 import AdminDashboard from './components/pages/dashboards/AdminDashboard';
 import TeacherDashboard from './components/pages/dashboards/TeacherDashboard';
@@ -24,36 +25,38 @@ import CreateNewExam from './components/exams/CreateNewExam';
 const App = () => {
   
   return (
-    <Container >
-    <Router>
-      <div>
-        <UserProvider >
-        <Header />
-        <ToastContainer />
+    <Container>
+      <Router>
+        <UserProvider>
+          <UserCoursesProvider> 
+            <div>
+              <Header />
+              <ToastContainer />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
-            <Route path="/student-dashboard" element={<StudentDashboard />} />
-            <Route path="/admin-home" element={<AdminHome />} />
-            <Route path="/teacher-home" element={<TeacherHome />} />
-            <Route path="/student-home" element={<StudentHome />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/get-started" element={<GetStarted />} />
-            <Route path="/take-exam" element={<TakeExam />} />
-            <Route path="/create-new-exam" element={<CreateNewExam />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </main>
-        <Footer />
+              <main>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                  <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+                  <Route path="/student-dashboard" element={<StudentDashboard />} />
+                  <Route path="/admin-home" element={<AdminHome />} />
+                  <Route path="/teacher-home" element={<TeacherHome />} />
+                  <Route path="/student-home" element={<StudentHome />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/get-started" element={<GetStarted />} />
+                  <Route path="/take-exam" element={<TakeExam />} />
+                  <Route path="/create-new-exam" element={<CreateNewExam />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </UserCoursesProvider>
         </UserProvider>
-      </div>
-    </Router>
+      </Router>
     </Container>
   );
 };

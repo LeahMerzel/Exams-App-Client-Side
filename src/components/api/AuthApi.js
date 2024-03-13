@@ -28,29 +28,14 @@ const authenticateUser = async (userData) => {
   if (!response.ok) {
     throw new Error('Failed to authenticate user');
   }
-  const responseData = await response.json();
-  // saveTokenToLocalStorage(responseData);
-  return responseData;
+  const responseUserData = await response.json();
+  saveUserToLocalStorage(responseUserData);
+  return responseUserData;
 };
 
-const fetchUserData = async (userId) => {
-  const response = await fetch(`https://localhost:7252/api/Auth/getUser/${userId}`, {
-
-    headers: {
-      // 'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!response.ok) {
-    throw new Error('Failed to fetch user data');
-  }
-  console.log("this is additional useradta in apiAuth", response)
-  return response.json(); 
-  //refreshToken() check setInterval
+const saveUserToLocalStorage = (userData) => {
+  localStorage.setItem('user', JSON.stringify(userData));
 };
 
-const saveTokenToLocalStorage = (token) => {
-  localStorage.setItem('token', token);
-};
 
-export { registerUser, authenticateUser, fetchUserData };
+export { registerUser, authenticateUser };

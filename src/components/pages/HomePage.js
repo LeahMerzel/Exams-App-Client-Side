@@ -2,34 +2,20 @@ import React from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../images/homePage/graphic-design-color-swatches-pens-desk-architectural-drawing-with-work-tools-accessories.jpg';
-import { useUser } from '../auth/UserContext';
 
 const HomePage = () => {
-  const { userRole } = useUser();
   const navigate = useNavigate();
 
   const handleTeacherClick = () => {
-    if (userRole === "Teacher" || userRole === null) {
       navigate('/teacher-home');
-    } else {
-      alert("You are not a teacher.");
-    }
   };
 
   const handleStudentClick = () => {
-    if (userRole === "Student" || userRole === null) {
       navigate('/student-home');
-    } else {
-      alert("You are not a student.");
-    }
   };
 
   const handleAdminClick = () => {
-    if (userRole === "Admin" || userRole === null) {
       navigate('/admin-home');
-    } else {
-      alert("You are not the admin.");
-    }
   };
 
   return (

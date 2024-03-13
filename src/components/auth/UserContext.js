@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { authenticateUser, fetchUserData, registerUser } from '../api/AuthApi'; 
+import { authenticateUser, registerUser } from '../api/AuthApi'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
@@ -8,60 +8,50 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState();
-  const [additionalUserData, setAdditionalUserData] = useState();
-  const [userLoggedIn, setUserLoggedIn] = useState(); 
+  const [user, setUser] = useState(null);
+  const [userLoggedIn, setUserLoggedIn] = useState(false); 
   const [userRole, setUserRole] = useState(null);
-  const [userCourses, setUserCourses] = useState([]);
-  const [redirected, setRedirected] = useState(false); // Flag to track redirection
-
-  console.log("userCourses:",userCourses)
 
 
   useEffect(() => {
-    if (userRole && !redirected) {
-      console.log("User role before navigation:", userRole);
-      if (userRole === "Admin") {
-        navigate("/admin-dashboard");
-      } else if (userRole === "Teacher") {
-        navigate("/teacher-dashboard");
-      } else if (userRole === "Student") {
-        navigate("/student-dashboard");
-      } else {
-        navigate('/');
+    const userDataString = localStorage.getItem('user');
+    
+    if (userDataString) {
+      const userData = JSON.parse(userDataString);
+      setUser(userData);
+      setUserLoggedIn(true);
+      setUserRole(userData.userRole);
+    }
+    
+  }, []);
+
+  useEffect(() => {
+    if (userRole && userLoggedIn) {
+      switch (userRole) {
+        case "Admin":
+          navigate("/admin-dashboard");
+          break;
+        case "Teacher":
+          navigate("/teacher-dashboard");
+          break;
+        case "Student":
+          navigate("/student-dashboard");
+          break;
+        default:
+          navigate('/');
+          break;
       }
-      setRedirected(true); // Set the flag to true after redirection
     }
-  }, [userRole, navigate, redirected]);
-
-  const setRole = async (role) => {
-    setUserRole(role);
-  }
-
-  const setCourse = (course) => {
-    if (!userCourses.includes(course)) {
-      setUserCourses([...userCourses, course]);
-    } else {
-      alert("User is already in course");
-    }
-  };
-  
-  const removeCourse = async (course) => {
-    setUserCourses(userCourses.filter(c => c !== course));
-  };
-
-  const login = async (userData) => {
+  }, [userRole, userLoggedIn, navigate]);
+    
+  const login = async (loginCredentials) => {
     try {
-      const response = await authenticateUser(userData);
+      const response = await authenticateUser(loginCredentials);
+      const { userRole } = response;
+      setUserRole(userRole);
       setUserLoggedIn(true);
       setUser(response);
-      await setRole(response.userRole);
-      console.log("response courses", response.courses)
-      if (response.courses) {
-        // Map over the courses and extract the course name or ID
-        const courses = response.courses.map(course => course.name); // or course.id depending on your API response
-        setUserCourses(courses? courses: []); // Set the userCourses state with the list of course names or IDs
-      }
+      localStorage.setItem('user', JSON.stringify(response));
       toast.success('Login successful!');
       return response;
     } catch {
@@ -69,11 +59,6 @@ export const UserProvider = ({ children }) => {
     }
   };
   
-  const logout = () => {
-    setUser('');
-    setUserLoggedIn(false);
-  };
-
   const register = async (userData) => {
     try {
       const response = await registerUser(userData);
@@ -83,29 +68,25 @@ export const UserProvider = ({ children }) => {
           await login({ Email, PasswordHash });
         }
         toast.success('Registered successfully!');
+        return response;
       }
     } catch (error) {
       console.error('Error registering user:', error.message);
       toast.error('Registration failed. Please try again.');
     }
   };
-  
-  const getAdditionalUserData = async (id) => {
-    if (user) {
-      try {
-        const additionalUserData = await fetchUserData(id);
-        setAdditionalUserData(additionalUserData);
-        return additionalUserData;
-      } catch (error) {
-        throw new Error('Error fetching additional user data:', error.message);
-      }
-    } else {
-      throw new Error('User is not logged in');
-    }
+    
+  const logout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('userCourses');
+    setUser(null);
+    setUserRole(null);
+    setUserLoggedIn(false);
+    navigate('/');
   };
 
   return (
-    <UserContext.Provider value={{ removeCourse, additionalUserData, getAdditionalUserData, setCourse, userCourses, setRole, userRole, user, userLoggedIn, login, logout, register }}> 
+    <UserContext.Provider value={{ userRole, user, userLoggedIn, login, logout, register }}> 
       {children}
     </UserContext.Provider>
   );
