@@ -23,7 +23,7 @@
 //   };
   
   export const updateEntityAPI = async (apiUrl, entityToUpdate) => {
-    console.log("update", apiUrl, entityToUpdate)
+    console.log("update entityToUpdate", entityToUpdate)
     try {
       const response = await fetch(apiUrl, {
 
@@ -39,7 +39,7 @@
         throw new Error('Failed to update entity');
       }
   
-      return await response.json();
+      return response;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -80,7 +80,7 @@
         throw new Error('Failed to delete entity');
       }
   
-      return await response.json();
+      return response;
     } catch (error) {
       throw new Error(error.message);
     }

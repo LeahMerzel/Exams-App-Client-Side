@@ -11,6 +11,7 @@ import GetQuestionAnswers from "../answers/GetQuestionAnswers";
 import { useNavigate } from "react-router-dom";
 
 const GetExamQuestions = ({ examId, onFinishExam }) => {
+  console.log("in questions")
   const { userRole } = useUser();
   const navigate = useNavigate(); // Initialize useNavigate
   const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${examId}/questions`;

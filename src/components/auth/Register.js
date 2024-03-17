@@ -4,12 +4,12 @@ import Form from '../forms/Form';
 import { Container, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const { userRole, register, isLoading} = useUser();
-  console.log(userRole);
   const [error, setError] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
+  const navigate = useNavigate();
 
   const fields = [
     { name: 'UserName', label: 'Username', type: 'text', regex: /^[a-zA-Z0-9_]+$/ },
@@ -22,7 +22,6 @@ const Register = () => {
   const handleSubmit = async (formData) => {
     try {
       const response = await register(formData);
-      setImageFile(null);
       if (response ) {
         toast.success('Registration successful!');
       }
@@ -43,6 +42,24 @@ const Register = () => {
     }
     return true;
   };
+
+  if (userRole) {
+    console.log("userRole", userRole)
+    switch (userRole) {
+      case "Admin":
+        navigate("/admin-dashboard");
+        break;
+      case "Teacher":
+        navigate("/teacher-dashboard");
+        break;
+      case "Student":
+        navigate("/student-dashboard");
+        break;
+      default:
+        navigate('/');
+        break;
+    }
+  }
 
   return (
     <div>

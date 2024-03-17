@@ -4,17 +4,21 @@ import useFetch from "../hooks/useFetch";
 import GetExamQuestions from "./questions/GetExamQuetions";
 import SubmitExam from "./SubmitExam";
 import Timer from "./Timer";
+import { useUser } from "../auth/UserContext";
 
-const TakeExam = ({ examId }) => {
-  const takeExamApiUrl = `https://localhost:7252/api/Exam/get-by-id/${examId}`;
+const TakeExam = () => {
+  const {studentExamId} = useUser();
+  const takeExamApiUrl = `https://localhost:7252/api/Exam/get-by-id/${studentExamId}`;
   const { data: exam, isLoading, error } = useFetch(takeExamApiUrl);
   const [showQuestions, setShowQuestions] = useState(false);
   const [grade, setGrade] = useState(null);
   const [failedQuestions, setFailedQuestions] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [examStarted, setExamStarted] = useState(false); // New state variable
 
   const handleStartExam = () => {
     setShowQuestions(true);
+    setExamStarted(true); // Update the examStarted state when the exam starts
   };
 
   const handleFinishExam = (grade, failedQuestions) => {
@@ -24,23 +28,23 @@ const TakeExam = ({ examId }) => {
   };
 
   const handleReturnToExam = () => {
-    setShowQuestions(true); 
+    setShowQuestions(true);
   };
 
   const handleSubmitExam = () => {
     setShowQuestions(false);
-    setSubmitting(true); 
+    setSubmitting(true);
   };
 
   useEffect(() => {
-    if (exam) {
+    if (examStarted && exam) {
       const timer = setTimeout(() => {
         handleSubmitExam();
       }, exam.durationInMinutes * 60 * 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [exam]);
+  }, [examStarted, exam]);
 
   return (
     <div>
@@ -56,14 +60,17 @@ const TakeExam = ({ examId }) => {
           )}
           <p>Duration: {exam.examDurationInMinutes} minutes</p>
           <Timer duration={exam.examDurationInMinutes} />
+          <br/>
           {!showQuestions && !submitting && (
             <Button onClick={handleStartExam}>Start Exam</Button>
           )}
+          <br/>
+          <br/>
           {showQuestions && !submitting && (
             <GetExamQuestions
               examId={exam.id}
               onFinishExam={handleFinishExam}
-              duration={exam.examDurationInMinutes} 
+              duration={exam.examDurationInMinutes}
             />
           )}
           {!submitting && (

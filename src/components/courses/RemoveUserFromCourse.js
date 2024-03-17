@@ -1,39 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Spinner, Alert, Form, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Spinner, Alert, Button } from "react-bootstrap";
 import { useUser } from "../auth/UserContext";
-import { deleteUserFromCourse } from "../api/CourseUsersApi";
-import { useUserCourses } from "./UserCoursesContext";
+import { deleteUserFromCourse } from '../api/CourseUsersApi';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const RemoveUserFromCourse = () => {
-  const { user } = useUser();
-  const { userCourses , setCourseUsersChanged } = useUserCourses();
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [removedCourseName, setRemovedCourseName] = useState("");
+const RemoveUserFromCourse = ({ onRemoveConfirmation }) => {
+  const { userCourse, setCourse, user } = useUser();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState("");
-
-  useEffect(() => {
-    if (selectedCourse && userCourses) {
-      const selectedCourseObj = userCourses.find(course => course.id === selectedCourse);
-      if (selectedCourseObj) {
-        setRemovedCourseName(selectedCourseObj.courseName);
-      }
-    }
-  }, [selectedCourse, userCourses]);
+  const [removedSuccessfully, setRemovedSuccessfully] = useState(false); 
 
   const handleRemoveUserFromCourse = async () => {
     try {
-      if (!user || !selectedCourse) {
+      if (!userCourse || !user || !userCourse.id) { // Add additional check for userCourse.id
         return;
       }
       setDeleteLoading(true);
       setDeleteError("");
-      await deleteUserFromCourse(selectedCourse, user.id);
-      setCourseUsersChanged(true);
-      setSelectedCourse("");
+      await deleteUserFromCourse(userCourse.id, user.id);
+      setCourse(null);
+      setRemovedSuccessfully(true);
+      localStorage.setItem('userCourse', JSON.stringify(""));
+      toast.success("user removed from course")
     } catch (error) {
       setDeleteError(error.message);
+      toast.error("user was not removed")
     } finally {
+      onRemoveConfirmation();
       setDeleteLoading(false);
     }
   };
@@ -46,31 +40,21 @@ const RemoveUserFromCourse = () => {
           Error removing user from course: {deleteError}
         </Alert>
       )}
-      {userCourses && (
+      {!userCourse && removedSuccessfully && (
+        <Alert variant="info">
+          User removed from course successfully. You must add yourself to a course.
+        </Alert>
+      )}
+      {userCourse && (
         <div>
-          <Form.Group controlId="selectCourse">
-            <Form.Label>Select a Course:</Form.Label>
-            <Form.Control
-              as="select"
-              onChange={(e) => setSelectedCourse(e.target.value)}
-              value={selectedCourse}
-            >
-              <option value="">Select a course</option>
-              {userCourses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.courseName}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+          <p>Currently subscribed to: {userCourse.courseName}</p>
           <Button
             variant="danger"
             onClick={handleRemoveUserFromCourse}
-            disabled={!selectedCourse || deleteLoading}
+            disabled={deleteLoading}
           >
             {deleteLoading ? "Removing..." : "Remove User from Course"}
           </Button>
-          <p>Removed from Course: {removedCourseName}</p>
         </div>
       )}
     </div>
@@ -78,3 +62,5 @@ const RemoveUserFromCourse = () => {
 };
 
 export default RemoveUserFromCourse;
+
+

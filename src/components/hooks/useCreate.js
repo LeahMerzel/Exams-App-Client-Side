@@ -21,9 +21,10 @@ const useCreate = (apiUrl) => {
       });
 
       if (!response.ok) {
+        toast.error("failed to create entity")
         throw new Error('Failed to create entity');
       }
-
+      toast.success("entity created successfully")
       return await response.json();
     } finally {
       setIsLoading(false);

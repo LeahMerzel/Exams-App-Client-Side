@@ -1,9 +1,9 @@
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './components/auth/UserContext';
-import { UserCoursesProvider } from './components/courses/UserCoursesContext'; 
 import Header from './components/layout/Header';
 import AdminDashboard from './components/pages/dashboards/AdminDashboard';
 import TeacherDashboard from './components/pages/dashboards/TeacherDashboard';
@@ -21,6 +21,8 @@ import StudentHome from './components/pages/StudentHome';
 import TakeExam from './components/exams/TakeExam';
 import GetStarted from './components/auth/GetStarted';
 import CreateNewExam from './components/exams/CreateNewExam';
+import CreateNewUser from './components/users/CreateNewUser';
+import CreateNewCourse from './components/courses/CreateNewCourse';
 
 const App = () => {
   
@@ -28,7 +30,6 @@ const App = () => {
     <Container>
       <Router>
         <UserProvider>
-          <UserCoursesProvider> 
             <div>
               <Header />
               <ToastContainer />
@@ -48,13 +49,14 @@ const App = () => {
                   <Route path="/register" element={<Register />} />
                   <Route path="/get-started" element={<GetStarted />} />
                   <Route path="/take-exam" element={<TakeExam />} />
+                  <Route path="/create-new-user" element={<CreateNewUser />} />
                   <Route path="/create-new-exam" element={<CreateNewExam />} />
+                  <Route path="/create-new-course" element={<CreateNewCourse />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </main>
               <Footer />
             </div>
-          </UserCoursesProvider>
         </UserProvider>
       </Router>
     </Container>

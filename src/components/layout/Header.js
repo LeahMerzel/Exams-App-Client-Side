@@ -5,8 +5,16 @@ import AppNavBar from './AppNavBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../images/logo/logo.jpg';
+import { useUser } from '../auth/UserContext';
 
 const Header = () => {
+  const { userLoggedIn, logout } = useUser();
+
+  const handleLogout = () => {
+    // Call the logout function when the logout link is clicked
+    logout();
+  };
+
   return (
     <Navbar bg="light" variant="light" expand="lg">
       <Container>
@@ -25,10 +33,17 @@ const Header = () => {
           <Nav className="me-auto">
             <AppNavBar />
           </Nav>
-          <Link to="/get-started" style={{ textDecoration: 'none', color: 'black', textAlign: 'center' }}>
-            <FontAwesomeIcon icon={faUser} size="2x" style={{ marginBottom: '5px', display: 'block' }} />
-            <span style={{marginRight: '20px'}}>Login</span>
-          </Link>
+          {userLoggedIn ? (
+            <Link to="/" onClick={handleLogout} style={{ textDecoration: 'none', color: 'black', textAlign: 'center' }}>
+              <FontAwesomeIcon icon={faUser} size="2x" style={{ marginBottom: '5px', display: 'block' }} />
+              <span style={{ marginRight: '20px' }}>Logout</span>
+            </Link>
+          ) : (
+            <Link to="/get-started" style={{ textDecoration: 'none', color: 'black', textAlign: 'center' }}>
+              <FontAwesomeIcon icon={faUser} size="2x" style={{ marginBottom: '5px', display: 'block' }} />
+              <span style={{ marginRight: '20px' }}>Login</span>
+            </Link>
+          )}
         </Navbar.Collapse>
         <Navbar.Brand as={Link} to="/" className="d-none d-lg-block"> {/* Hide logo on mobile */}
           <img

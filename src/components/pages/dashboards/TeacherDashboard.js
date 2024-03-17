@@ -1,54 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GetAllExams from '../../exams/GetAllExams';
 import GetUserData from '../../users/GetUserData';
 import { useUser } from '../../auth/UserContext';
 import CreateNewExam from '../../exams/CreateNewExam';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import AddUserToCourse from '../../courses/AddUserToCourse';
 import GetCourseUsers from '../../courses/GetCourseUsers';
-import GetUserCourses from '../../users/GetUserCourses';
-import { useUserCourses } from '../../courses/UserCoursesContext';
+import GetUserCourse from '../../users/GetUserCourse';
+import { useNavigate } from 'react-router-dom';
 
 const TeacherDashboard = () => {
-  const { userLoggedIn } = useUser();
-  const { userCourses } = useUserCourses();
-  
-  if (userCourses){
-    console.log("user courses", userCourses);
+  const { userCourse, userLoggedIn } = useUser();
+  const [showCreateExam, setShowCreateExam] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCreateExam = () => {
+    setShowCreateExam(true);
+    navigate("/create-new-exam");
   }
 
   return (
     <Container className="align-items-center mt-3 mb-5 p-3">
       <h3>Teacher Dashboard</h3>
+      <br/>
       {userLoggedIn && (
         <>
           <Row>
-            <Col xs={12} md={3} lg={3} className="mb-4">
-              <h4>Add Teacher To Course</h4>
-              <AddUserToCourse />
+            <Col xs={12} md={3} lg={3} className="mb-5">
+              <h4>Manage Teacher's Course</h4>
+              <AddUserToCourse/>
             </Col>
-            {userCourses && (
+            {userCourse && (
               <>
-                  <Col xs={12} md={9} lg={9} className="mb-4">
+                  <Col xs={12} md={9} lg={9} className="mb-5">
                   <h4>My Info</h4>
                   <GetUserData />
                   </Col>
                     <Row>
-                    <Col xs={12} md={9} lg={9} className="mb-4">
+                    <Col xs={12} md={12} lg={12} className="mb-5">
                       <h4>My Exams:</h4>
                       <GetAllExams />
                     </Col>
-                    <Col xs={12} md={6} lg={6} className="mb-4">
+                    <Col xs={12} md={6} lg={6} className="mb-5">
                       <h4>Create New Exam</h4>
-                      <CreateNewExam />
+                      <Button onClick={handleCreateExam}>Create Exam</Button>
+                      {showCreateExam && <CreateNewExam />}
                     </Col>
                   </Row>
                   <Row>
-                    <Col xs={12} md={9} lg={9} className="mb-4">
-                      <h4>The Courses I Teach In</h4>
-                      <GetUserCourses />
+                    <Col xs={12} md={12} lg={12} className="mb-5">
+                      <h4>The Course I Teach In</h4>
+                      <GetUserCourse />
                     </Col>
-                    <Col xs={12} md={3} lg={3} className="mb-4">
+                  </Row>
+                  <Row>
+                    <Col xs={12} md={12} lg={12} className="mb-5">
                       <h4>My Students:</h4>
                       <GetCourseUsers />
                     </Col>

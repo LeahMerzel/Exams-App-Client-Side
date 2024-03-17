@@ -1,6 +1,23 @@
 // CourseUsersApi.js
 
-export const fetchCourseUsers = async (courseId, userId) => {
+export const fetchCourseById = async (courseId) => {
+  try {
+    const response = await fetch(`https://localhost:7252/api/Course/get-by-id/${courseId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch course by courseId');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching course by id:', error);
+    return '';
+  }
+};
+
+export const fetchCourseUsers = async (courseId) => {
   try {
     const response = await fetch(`https://localhost:7252/api/Course/${courseId}/course-users`, {
       headers: {
@@ -10,16 +27,10 @@ export const fetchCourseUsers = async (courseId, userId) => {
     if (!response.ok) {
       throw new Error('Failed to fetch user data');
     }
-    const courseUsersData = await response.json();
-    const userCourses = courseUsersData.filter(user => user.id === userId);
-    if (userCourses.length > 0) {
-      return userCourses[0].courses;
-    } else {
-      return [];
-    }
+    return response.json();
   } catch (error) {
     console.error('Error fetching course users:', error);
-    return [];
+    return '';
   }
 };
 
@@ -34,8 +45,7 @@ export const addUserToCourse = async (courseId, userId) => {
   if (!response.ok) {
     throw new Error('Failed to add user to course');
   }
-  console.log("response in courseApi", response);
-  return response;
+  return response.json();
 };
 
 export const deleteUserFromCourse = async (courseId, userId) => {

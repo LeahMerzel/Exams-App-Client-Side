@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Table from 'react-bootstrap/Table';
 import Pagination from 'react-bootstrap/Pagination';
-import { Button } from "react-bootstrap";
+import { Button , Container} from "react-bootstrap";
 import { useUser } from "../auth/UserContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt, faPenToSquare } from '@fortawesome/free-solid-svg-icons'; // Import the required icons
 
-function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCourseExams }) {
+function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCourseExams, entityName }) {
   const {userRole} = useUser();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; 
@@ -38,16 +40,36 @@ function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCours
         <td key={i}>{String(value)}</td>
       ))}
       <td>
-        {!userRole === "Student" ? (
+        {(entityName === "users" && userRole === "Admin") && (
           <>
-            <Button onClick={() => onEdit(item.id)}>Edit</Button>
-            <Button onClick={() => onDelete(item.id)}>Delete</Button>
+            <Button onClick={() => onEdit(item.id)}>
+              <FontAwesomeIcon icon={faEdit} size="1x" style={{ marginBottom: '5px', display: 'block' }} />
+              Edit
+            </Button>
+            <Button onClick={() => onDelete(item.id)}>
+              <FontAwesomeIcon icon={faTrashAlt} size="1x" style={{ marginBottom: '5px', display: 'block' }} />
+              Delete
+            </Button>
+          </>
+        )}
+        { (entityName !== "users" && userRole !== "Student")  ? (
+          <>
+            <Button onClick={() => onEdit(item.id)}>
+              <FontAwesomeIcon icon={faEdit} size="1x" style={{ marginBottom: '5px', display: 'block' }} />
+              Edit
+            </Button>
+            <Button onClick={() => onDelete(item.id)}>
+              <FontAwesomeIcon icon={faTrashAlt} size="1x" style={{ marginBottom: '5px', display: 'block' }} />
+              Delete
+            </Button>
             {onGetSubmitted && <Button onClick={() => onGetSubmitted(item.id)}>See Students' Submitted Exams</Button>}
           </>
         ) : (
           <>
-          {onTakeExam && <Button onClick={() => onTakeExam(item.id)}>Take Exam</Button>}
-          {onCourseExams && <Button onClick={() => onCourseExams(item.id)}>See Course's Exams</Button>}
+            {onTakeExam && <Button onClick={() => onTakeExam(item.id)}>
+            <FontAwesomeIcon icon={faPenToSquare} size="1x" style={{ marginBottom: '5px', display: 'block' }} />
+              Take Exam</Button>}
+            {onCourseExams && <Button onClick={() => onCourseExams(item.id)}>See Course's Exams</Button>}
           </>
         )}
       </td>
@@ -55,14 +77,14 @@ function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCours
   ));
 
   return (
-    <>
-      <Table striped bordered hover>      
+    <Container >
+      <Table striped bordered hover>
         <thead>
           <tr>
             {Object.keys(data[0]).map((key, index) => (
               <th key={index}>{key}</th>
             ))}
-            <th>Actions</th> 
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
@@ -76,7 +98,7 @@ function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCours
         ))}
         <Pagination.Next onClick={nextPage} />
       </Pagination>
-    </>
+    </Container>
   );
 }
 

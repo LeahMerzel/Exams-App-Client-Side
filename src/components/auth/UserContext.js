@@ -1,8 +1,9 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { authenticateUser, registerUser } from '../api/AuthApi'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { authenticateUser, registerUser} from '../api/AuthApi';
+import { fetchCourseById } from '../api/CourseUsersApi';
 
 const UserContext = createContext();
 
@@ -11,38 +12,31 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false); 
   const [userRole, setUserRole] = useState(null);
-
+  const [userCourse, setUserCourse] = useState(null);
+  const [studentExamId, setStudentExamId] = useState(null);
 
   useEffect(() => {
     const userDataString = localStorage.getItem('user');
-    
+    const userCourseString = localStorage.getItem('userCourse'); // Retrieve userCourse from localStorage
+
     if (userDataString) {
       const userData = JSON.parse(userDataString);
       setUser(userData);
       setUserLoggedIn(true);
       setUserRole(userData.userRole);
     }
-    
+
+    if (userCourseString) {
+      const courseData = JSON.parse(userCourseString);
+      setUserCourse(courseData);
+    }
   }, []);
 
-  useEffect(() => {
-    if (userRole && userLoggedIn) {
-      switch (userRole) {
-        case "Admin":
-          navigate("/admin-dashboard");
-          break;
-        case "Teacher":
-          navigate("/teacher-dashboard");
-          break;
-        case "Student":
-          navigate("/student-dashboard");
-          break;
-        default:
-          navigate('/');
-          break;
-      }
-    }
-  }, [userRole, userLoggedIn, navigate]);
+  const setUserCourseAfterLogin = async (courseId) => {
+    const response = await fetchCourseById(courseId);
+    setUserCourse(response);
+    localStorage.setItem('userCourse', JSON.stringify(response));
+  }
     
   const login = async (loginCredentials) => {
     try {
@@ -52,6 +46,7 @@ export const UserProvider = ({ children }) => {
       setUserLoggedIn(true);
       setUser(response);
       localStorage.setItem('user', JSON.stringify(response));
+      setUserCourseAfterLogin(response.courseId);
       toast.success('Login successful!');
       return response;
     } catch {
@@ -78,15 +73,24 @@ export const UserProvider = ({ children }) => {
     
   const logout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('userCourses');
+    localStorage.removeItem('userCourse'); // Remove userCourse from localStorage upon logout
     setUser(null);
     setUserRole(null);
     setUserLoggedIn(false);
+    setUserCourse(null); // Set userCourse to null upon logout
     navigate('/');
   };
 
+  const setCourse = (course) =>{
+    setUserCourse(course);
+  };
+
+  const setExamId = (exam) =>{
+    setStudentExamId(exam);
+  }
+
   return (
-    <UserContext.Provider value={{ userRole, user, userLoggedIn, login, logout, register }}> 
+    <UserContext.Provider value={{ setExamId, studentExamId, setCourse, userCourse, userRole, user, userLoggedIn, login, logout, register }}> 
       {children}
     </UserContext.Provider>
   );

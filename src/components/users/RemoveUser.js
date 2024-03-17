@@ -2,7 +2,7 @@ import React from "react";
 import useDelete from "../hooks/useDelete";
 import { Button, Spinner, Alert } from "react-bootstrap";
 
-const RemoveUser = ( userId ) => {
+const RemoveUser = ( {userId} ) => {
     const removeUserUrl = `https://localhost:7252/api/User/delete-${userId}`;
     const { deleteEntity, isLoading, error } = useDelete(removeUserUrl);
 

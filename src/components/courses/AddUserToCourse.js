@@ -4,11 +4,11 @@ import { Spinner, Alert, Form, Button } from "react-bootstrap";
 import { useUser } from "../auth/UserContext";
 import { addUserToCourse } from "../api/CourseUsersApi";
 import RemoveUserFromCourse from "./RemoveUserFromCourse";
-import { useUserCourses } from "./UserCoursesContext";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const AddUserToCourse = () => {
-  const { user } = useUser();
-  const { setCourseUsersChanged } = useUserCourses();
+const AddUserToCourse = () => { 
+  const { userCourse, setCourse, user } = useUser();
   const getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
   const {
     data: courses,
@@ -36,13 +36,20 @@ const AddUserToCourse = () => {
       if (!user || !selectedCourse) {
         return;
       }
+      if (userCourse !== ""){
+        alert("You are already subscribed to a course.");
+        return;
+      }
       setCreateLoading(true);
       setCreateError("");
-      await addUserToCourse(selectedCourse, user.id);
-      setCourseUsersChanged(true);
+      const response = await addUserToCourse(selectedCourse, user.id);
+      setCourse(response);
+      localStorage.setItem('userCourse', JSON.stringify(response));
       setSelectedCourse("");
+      toast.success("user added to the course")
     } catch (error) {
       setCreateError(error.message);
+      toast.error("user was not added")
     } finally {
       setCreateLoading(false);
     }
@@ -52,45 +59,58 @@ const AddUserToCourse = () => {
     setShowRemoveUser(true);
   };
 
+  const handleRemoveConfirmation = () => {
+    setShowRemoveUser(false); 
+  };
+
   return (
     <div>
-      {(coursesLoading || createLoading) && <Spinner animation="border" />}
-      {fetchError && (
-        <Alert variant="danger">Error fetching courses: {fetchError}</Alert>
-      )}
-      {createError && (
-        <Alert variant="danger">
-          Error adding user to course: {createError}
-        </Alert>
-      )}
-      {courses && (
+      {userCourse && (
         <div>
-          <Form.Group controlId="selectCourse">
-            <Form.Label>Select a Course:</Form.Label>
-            <Form.Control
-              as="select"
-              onChange={(e) => setSelectedCourse(e.target.value)}
-              value={selectedCourse}
-            >
-              <option value="">Select a course</option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.courseName}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-          <Button
-            variant="primary"
-            onClick={handleAddUserToCourse}
-            disabled={!selectedCourse || createLoading}
-          >
-            Add User to Course
-          </Button>
-          <p>Added to Course: {addedCourseName}</p>
-          <p>Want to Remove from Course?</p>
+          <Alert variant="primary">You are successfully enrolled in course {userCourse.courseName}</Alert>
+          <p>Want to remove from the course?</p>
           <Button onClick={handleRemove}>Remove from Course</Button>
-          {showRemoveUser && <RemoveUserFromCourse />}
+          {showRemoveUser && <RemoveUserFromCourse onRemoveConfirmation={handleRemoveConfirmation}/>}
+        </div>
+      )}
+      {userCourse === "" && (
+        <div>
+          {(coursesLoading || createLoading) && <Spinner animation="border" />}
+          {fetchError && (
+            <Alert variant="danger">Error fetching courses: {fetchError}</Alert>
+          )}
+          {createError && (
+            <Alert variant="danger">
+              Error adding user to course: {createError}
+            </Alert>
+          )}
+          {courses && (
+            <div>
+              <Form.Group controlId="selectCourse">
+                <Form.Label>Select a Course:</Form.Label>
+                <Form.Control
+                  as="select"
+                  onChange={(e) => setSelectedCourse(e.target.value)}
+                  value={selectedCourse}
+                >
+                  <option value="">Select a course</option>
+                  {courses.map((course) => (
+                    <option key={course.id} value={course.id}>
+                      {course.courseName}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+              <Button
+                variant="primary"
+                onClick={handleAddUserToCourse}
+                disabled={!selectedCourse || createLoading}
+              >
+                Add User to Course
+              </Button>
+              <p>Added to Course: {addedCourseName}</p>
+            </div>
+          )}
         </div>
       )}
     </div>
