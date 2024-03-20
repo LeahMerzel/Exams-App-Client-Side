@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
   const [userLoggedIn, setUserLoggedIn] = useState(false); 
   const [userRole, setUserRole] = useState(null);
   const [userCourse, setUserCourse] = useState(null);
-  const [studentExamId, setStudentExamId] = useState(null);
+  const [studentExam, setStudentExam] = useState(null);
 
   useEffect(() => {
     const userDataString = localStorage.getItem('user');
@@ -85,12 +85,12 @@ export const UserProvider = ({ children }) => {
     setUserCourse(course);
   };
 
-  const setExamId = (exam) =>{
-    setStudentExamId(exam);
+  const setExam = (exam) =>{
+    setStudentExam(exam);
   }
 
   return (
-    <UserContext.Provider value={{ setExamId, studentExamId, setCourse, userCourse, userRole, user, userLoggedIn, login, logout, register }}> 
+    <UserContext.Provider value={{ studentExam, setExam, setCourse, userCourse, userRole, user, userLoggedIn, login, logout, register }}> 
       {children}
     </UserContext.Provider>
   );

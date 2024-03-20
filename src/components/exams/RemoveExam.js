@@ -2,7 +2,7 @@ import React from "react";
 import useDelete from "../hooks/useDelete";
 import { Button, Spinner, Alert } from "react-bootstrap";
 
-const RemoveExam = ( examId ) => {
+const RemoveExam = ( {examId} ) => {
     const removeExamUrl = `https://localhost:7252/api/Exam/delete-${examId}`;
     const { deleteEntity, isLoading, error } = useDelete(removeExamUrl);
 

@@ -22,11 +22,15 @@ const useFetch = (apiUrl) => {
     }
   };
 
+  const refetch = () => {
+    fetchData();
+  };
+
   useEffect(() => {
     fetchData();
   }, [apiUrl]);
 
-  return { data, isLoading, error, fetchData };
+  return { data, isLoading, error, refetch };
 };
 
 export default useFetch;

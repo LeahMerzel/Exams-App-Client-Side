@@ -10,11 +10,11 @@ import { useUser } from "../../auth/UserContext";
 import GetQuestionAnswers from "../answers/GetQuestionAnswers";
 import { useNavigate } from "react-router-dom";
 
-const GetExamQuestions = ({ examId, onFinishExam }) => {
+const GetExamQuestions = ({ onFinishExam }) => {
+  const { userRole, studentExamId } = useUser();
   console.log("in questions")
-  const { userRole } = useUser();
   const navigate = useNavigate(); // Initialize useNavigate
-  const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${examId}/questions`;
+  const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${studentExamId}/questions`;
   const { data: questions, isLoading, error } = useFetch(getExamQuestionsApiUrl);
   const { filterText, setFilterText, filteredData } = useFilterableTable(questions || []);
   const [selectedAnswers, setSelectedAnswers] = useState({});

@@ -9,31 +9,42 @@ import { useUser } from "../auth/UserContext";
 import { useNavigate } from 'react-router-dom';
 
 const GetUpcomingExams = () => {
-    const { userCourse, setExamId, studentExamId } = useUser();
+    const { userCourse, setExam, studentExam } = useUser();
     let getUpcomingExamsByCourseApiUrl;
     if (userCourse){
         getUpcomingExamsByCourseApiUrl = `https://localhost:7252/api/Course/${userCourse.id}/exams`;
     }
-    const { data: upcomingExams, isLoading, error } = useFetch(getUpcomingExamsByCourseApiUrl);
+    const { data: examsData, isLoading, error } = useFetch(getUpcomingExamsByCourseApiUrl);
+    const [upcomingExams, setUpcomingExams] = useState([]); 
     const { filterText, setFilterText} = useFilterableTable(upcomingExams || []);
     const [showModal, setShowModal] = useState(false);
     const [modalConfirmed, setModalConfirmed] = useState(false);
+    const [takenExams, setTakenExams] = useState([]);
+    const [submitSuccess, setSubmitSuccess] = useState(false); 
 
     const currentDateTime = new Date().toISOString();
-    const filteredExams = upcomingExams?.filter(exam => exam.startExamDateTime > currentDateTime);
+    const filteredExams = upcomingExams?.filter(exam => exam.startExamDateTime > currentDateTime && !takenExams.includes(exam.id));
 
     const navigate = useNavigate();
 
-
-    const handleTakeExam = (examId) => {
-        setExamId(examId);
-        if (studentExamId){
+    useEffect(() => {
+        if (examsData) {
+            setUpcomingExams(examsData);
+        }
+      }, [examsData]);
+    
+    const handleTakeExam = (exam) => {
+        setExam(exam);
+        if (!studentExam){ return }
+        if (studentExam.id){
         setShowModal(true);
         }
+        setSubmitSuccess(true);
+        setTakenExams(prevExams => [...prevExams, exam.id]);
     };
 
     const handleModalClose = () => {
-        setExamId(null);
+        setExam(null);
         setShowModal(false);
     };
 
@@ -42,6 +53,12 @@ const GetUpcomingExams = () => {
         navigate("/take-exam")
         setShowModal(false);
     };
+
+    useEffect(() => {
+        if (submitSuccess) {
+          setSubmitSuccess(false);
+        }
+      }, [submitSuccess]);
 
     return(
         <Card>
@@ -52,7 +69,7 @@ const GetUpcomingExams = () => {
                         <div>
                             <SearchBar filterText={filterText} setFilterText={setFilterText} />
                             <div style={{ overflowX: 'auto' }}>
-                            <Alert>DoubleClick to start an exam</Alert>
+                            <Alert className="mt-2" variant="primary" style={{ display: "inline-block" }}>DoubleClick to start an exam</Alert>
                             <DataTable data={filteredExams} onTakeExam={handleTakeExam}/>
                         </div>
                             <Modal show={showModal} onHide={handleModalClose}>
@@ -60,7 +77,7 @@ const GetUpcomingExams = () => {
                                     <Modal.Title>Exam Confirmation</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    Do you want to log into the exam? The exam timer will start.
+                                    Do you want to log into the exam? 
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <Button variant="secondary" onClick={handleModalClose}>

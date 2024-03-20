@@ -4,15 +4,14 @@ import Pagination from 'react-bootstrap/Pagination';
 import { Button , Container} from "react-bootstrap";
 import { useUser } from "../auth/UserContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faPenToSquare } from '@fortawesome/free-solid-svg-icons'; // Import the required icons
+import { faEdit, faTrashAlt, faPenToSquare } from '@fortawesome/free-solid-svg-icons'; 
 
-function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCourseExams, entityName }) {
+function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCourseExams, entityName, onGetGradeAvg }) {
   const {userRole} = useUser();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; 
 
   if (!data || data.length === 0) {
-    console.log("Data is null, undefined, or empty:", data);
     return <p>No data available</p>;
   }
 
@@ -62,11 +61,11 @@ function DataTable({ data, onEdit, onDelete, onTakeExam, onGetSubmitted, onCours
               <FontAwesomeIcon icon={faTrashAlt} size="1x" style={{ marginBottom: '5px', display: 'block' }} />
               Delete
             </Button>
-            {onGetSubmitted && <Button onClick={() => onGetSubmitted(item.id)}>See Students' Submitted Exams</Button>}
+            {onGetGradeAvg && <Button onClick={() => onGetGradeAvg(item.id)}>Exam's Grade Avg</Button>}
           </>
         ) : (
           <>
-            {onTakeExam && <Button onClick={() => onTakeExam(item.id)}>
+            {onTakeExam && <Button onClick={() => onTakeExam(item)}>
             <FontAwesomeIcon icon={faPenToSquare} size="1x" style={{ marginBottom: '5px', display: 'block' }} />
               Take Exam</Button>}
             {onCourseExams && <Button onClick={() => onCourseExams(item.id)}>See Course's Exams</Button>}
