@@ -1,28 +1,33 @@
-import React, { useState } from "react";
-import useUpdate from "../hooks/useUpdate";
-import Form from "../forms/Form";
-import { Spinner, Alert, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Spinner, Alert, Button, Form } from "react-bootstrap";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useFetch from '../hooks/useFetch';
+import useUpdate from "../hooks/useUpdate";
 
-
-const UpdateUser = ({ userToUpdate, onFormClose, userId }) => {
+const UpdateUser = ({ onFormClose, userId }) => {
+  const getUserApiUrl = `https://localhost:7252/api/User/get-by-id/${userId}`;
+  const { data: userToUpdate } = useFetch(getUserApiUrl);
   const updateUserApiUrl = `https://localhost:7252/api/Auth/update`;
   const { updateEntity, isLoading, error } = useUpdate(updateUserApiUrl);
+  const [formData, setFormData] = useState({});
   const [showForm, setShowForm] = useState(true); // State to control the visibility of the update form
 
-  const fields = [
-    { name: "userName", label: "Username", type: "text"},
-    { name: "passwordHash", label: "New Password", type: "password"},
-    { name: "fullName", label: "Full Name", type: "text"},
-    { name: "email", label: "Email Address", type: "email" }
-  ];
+  useEffect(() => {
+    if (userToUpdate) {
+      // Exclude fields teachersExams, studentsTakenExams, and studentGradeAvg
+      const { teachersExams, studentsTakenExams, studentGradeAvg, ...formDataWithoutExcluded } = userToUpdate;
+      setFormData(formDataWithoutExcluded);
+    }
+  }, [userToUpdate]);
 
-  const onSubmit = async (formData) => {
-    formData.id = userId? userId :userToUpdate.id;
-    if (!formData.passwordHash) {
-      formData.passwordHash = userToUpdate.passwordHash;
-    }    
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await updateEntity(formData);
       if (response) {
@@ -42,11 +47,23 @@ const UpdateUser = ({ userToUpdate, onFormClose, userId }) => {
         <>
           {isLoading && <Spinner animation="border" />}
           {error && <Alert variant="danger">Error: {error}</Alert>}
-          <Form fields={fields} onSubmit={onSubmit} entityName={"Update"} />
+          {userToUpdate && (
+            <Form onSubmit={onSubmit}>
+              {Object.entries(formData).map(([key, value]) => (
+                <Form.Group key={key}>
+                  <Form.Label>{key}</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name={key}
+                    value={value}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              ))}
+              <Button type="submit">Submit</Button>
+            </Form>
+          )}
         </>
-      )}
-      {!showForm && (
-        <Button onClick={() => setShowForm(true)}>Update User Details</Button>
       )}
     </div>
   );

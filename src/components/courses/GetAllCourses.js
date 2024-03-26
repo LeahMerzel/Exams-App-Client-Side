@@ -1,3 +1,5 @@
+// GetAllCourses.js
+
 import React, { useState } from "react";
 import useFetch from "../hooks/useFetch";
 import { Spinner, Alert, Card, Modal, Button } from "react-bootstrap";
@@ -10,7 +12,7 @@ import GetCourseExams from './GetCourseExams';
 
 const GetAllCourses = () => {
     const getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
-    const { data: courses, isLoading, error } = useFetch(getAllCoursesApiUrl);
+    const { data: courses, isLoading, error, refetch } = useFetch(getAllCoursesApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(courses || []);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -31,6 +33,16 @@ const GetAllCourses = () => {
         setShowDeleteModal(false);
         setShowEditModal(false);
     };
+
+    const handleCourseUpdated = () => {
+        refetch(); // Refetch courses data after update
+    };
+
+    
+    const handleCourseRemoved = () => {
+        refetch(); // Refetch courses data after delete
+        handleCloseModal(); // Close the modal after successful delete
+    };
   
     return (
         <Card>
@@ -41,27 +53,22 @@ const GetAllCourses = () => {
                     <div>
                         <SearchBar filterText={filterText} setFilterText={setFilterText} />
                         <div style={{ overflowX: 'auto' }}>
-                        <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
+                            <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
                         </div>
                         <Modal show={showEditModal} onHide={handleCloseModal}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Edit Course</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                {!!selectedCourseId && <UpdateCourse courseId={selectedCourseId} />}
+                                {!!selectedCourseId && <UpdateCourse courseId={selectedCourseId} onUpdateSuccess={handleCourseUpdated} onHideModal={handleCloseModal} />}
                             </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCloseModal}>
-                                    Close
-                                </Button>
-                            </Modal.Footer>
                         </Modal>
                         <Modal show={showDeleteModal} onHide={handleCloseModal}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Delete Course</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                {!!selectedCourseId && <RemoveCourse courseId={selectedCourseId} />}
+                                {!!selectedCourseId && <RemoveCourse courseId={selectedCourseId} onRemoveSuccess={handleCourseRemoved} />}
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseModal}>

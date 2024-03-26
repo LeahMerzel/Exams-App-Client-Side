@@ -6,11 +6,10 @@ const StartExam = ({ questionId, questionNumber, questionDescription, questionSc
   const [answers, setAnswers] = useState([]);
   const [failedQuestions, setFailedQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(() => {
-    // Load selected answer from local storage when component mounts
     const storedAnswer = localStorage.getItem(`selectedAnswer_${questionId}`);
     return storedAnswer ? JSON.parse(storedAnswer) : null;
   });
-  const [examEnded, setExamEnded] = useState(false); // State to track if exam has ended
+  const [examEnded, setExamEnded] = useState(false); 
 
   const getAnswersApiUrl = `https://localhost:7252/api/Question/${questionId}/answers`;
   const { data: answersData, isLoading: isLoadingAnswers, error: answersError } = useFetch(getAnswersApiUrl);
@@ -22,32 +21,32 @@ const StartExam = ({ questionId, questionNumber, questionDescription, questionSc
   }, [answersData]);
 
   useEffect(() => {
-    // Save selected answer to local storage when it changes
     localStorage.setItem(`selectedAnswer_${questionId}`, JSON.stringify(selectedAnswer));
   }, [selectedAnswer, questionId]);
 
   const handleAnswerSelection = (answer) => {
-    setSelectedAnswer(answer); // Update selected answer state
+    setSelectedAnswer(answer);
     if (!answer.isCorrect) {
       const correctAnswer = answers.find((ans) => ans.isCorrect);
       const questionInfo = {
         questionNumber: questionNumber,
         questionDescription: questionDescription,
         questionScoring: questionScoring,
-        correctAnswerNumber: correctAnswer.number,
         correctAnswerDescription: correctAnswer.answerDescription
       };
-      setFailedQuestions((prevFailedQuestions) => [...prevFailedQuestions, questionInfo]);
+      if (!failedQuestions.some((question) => question.questionNumber === questionInfo.questionNumber)) {
+        setFailedQuestions((prevFailedQuestions) => [...prevFailedQuestions, questionInfo]);
+      }
     }
   };
-
+  
   const handleEndExam = () => {
     if (!selectedAnswer) {
       alert("Please select an answer before submitting the exam.");
       return;
     }
     onEndExam(failedQuestions);
-    setExamEnded(true); // Set examEnded to true when exam ends
+    setExamEnded(true); 
   };
 
   if (isLoadingAnswers) {

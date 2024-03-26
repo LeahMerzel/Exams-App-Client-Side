@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Spinner, Alert, Button, Card } from "react-bootstrap";
 import useFetch from "../hooks/useFetch";
 import StartExam from '../exams/questions/StartExam';
@@ -6,16 +6,19 @@ import Timer from './Timer';
 import { useUser } from "../auth/UserContext";
 import useCreate from '../hooks/useCreate';
 import { useNavigate } from "react-router-dom";
+import PushToQuestionsFailed from './questions/PushToQuestionsFailed';
 
 const TakeExam = () => {
   const navigate = useNavigate();
   const { studentExam, user } = useUser();
+
   const takeExamApiUrl = `https://localhost:7252/api/Exam/get-by-id/${studentExam.id}`;
   const { data: exam, isLoading: isLoadingExam, error: examError } = useFetch(takeExamApiUrl);
   const getQuestionsApiUrl = `https://localhost:7252/api/Exam/${studentExam.id}/questions`;
   const { data: questions, isLoading: isLoadingQuestions, error: questionsError } = useFetch(getQuestionsApiUrl);
   const createStudentExamApiUrl = `https://localhost:7252/api/StudentExam/create`;
-  const { createEntity, isLoading: isLoadingCreate, error: createError } = useCreate(createStudentExamApiUrl);
+  const { createEntity } = useCreate(createStudentExamApiUrl);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [startExam, setStartExam] = useState(false);
   const [examStarted, setExamStarted] = useState(false); 
@@ -23,7 +26,7 @@ const TakeExam = () => {
   const [failedQuestions, setFailedQuestions] = useState([]);
   const [calculatingGrade, setCalculatingGrade] = useState(false);
   const [displayGrade, setDisplayGrade] = useState(false);
-  const [examSubmitted, setExamSubmitted] = useState(false); // State to track if exam is submitted
+  const [examSubmitted, setExamSubmitted] = useState(false); 
 
   const handleStartExam = () => {
     setStartExam(true);
@@ -44,22 +47,22 @@ const TakeExam = () => {
       studentId: user.id,
       examId: studentExam.id,
       grade: grade,
-      failedQuestions: failedQuestions,
       wasExamLoggedInToByStudent: true
     };
     const response = await createEntity(studentExamData);
     if (response){
-      alert("You've Successfully Submitted Your Exam.");
-      navigate("/student-dashboard");
-      setExamSubmitted(true); 
-    }
+      setExamSubmitted(true);
+        await PushToQuestionsFailed({ studentExamId: response.id, failedQuestions: failedQuestions });
+        alert("You've Successfully Submitted Your Exam.");
+        navigate("/student-dashboard");
+        }
+       
   };
 
   const updateGradeAndFailedQuestions = (failedQuestionsList) => {
     setStartExam(false);
     setFailedQuestions(failedQuestionsList);
     setCalculatingGrade(true);
-    // Simulate calculation delay with setTimeout
     setTimeout(() => {
       let calculatedGrade = 100;
       failedQuestionsList.forEach((question) => {
@@ -68,7 +71,7 @@ const TakeExam = () => {
       setGrade(calculatedGrade);
       setCalculatingGrade(false);
       setDisplayGrade(true);
-    }, 2000);
+    }, 1000);
   };
 
   return (
@@ -89,7 +92,7 @@ const TakeExam = () => {
               )}
               {startExam && questions && questions.length > 0 && (
                 <>
-                  {!examSubmitted && <Timer duration={studentExam.examDurationInMinutes} />} {/* Render the Timer only if exam is not submitted */}
+                  {!examSubmitted && <Timer duration={studentExam.examDurationInMinutes} />}
                   <br /><br />
                   <div key={currentQuestionIndex}>
                     <h3>{questions[currentQuestionIndex].questionNumber}</h3>

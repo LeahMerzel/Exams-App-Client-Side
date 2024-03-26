@@ -7,16 +7,18 @@ import { useUser } from "../auth/UserContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SaveExamLocally from "./SaveExamLocally";
 
 const CreateNewExam = () => {
   const { userCourse, user } = useUser();
   const createExamApiUrl = "https://localhost:7252/api/Exam/create";
   const { createEntity, isLoading, error } = useCreate(createExamApiUrl);
-  const [showForm, setShowForm] = useState(true); // State to control form visibility
+  const [showForm, setShowForm] = useState(true); 
   const [questionsOrderRandom, setQuestionsOrderRandom] = useState(true);
   const [examId, setExamId] = useState();
-  const [showCreateQuestion, setShowCreateQuestion] = useState(false); // State to control CreateNewQuestion visibility
-  const [examSubmitted, setExamSubmitted] = useState(false); // State to track whether exam is submitted or not
+  const [showCreateQuestion, setShowCreateQuestion] = useState(false); 
+  const [examSubmitted, setExamSubmitted] = useState(false);
+  const [saveExam, setSaveExam]  = useState(false);
   const navigate = useNavigate();
 
   const fields = [
@@ -39,6 +41,7 @@ const CreateNewExam = () => {
 
   const onSubmit = async (formData) => {
     formData.teacherId = user.id;
+    formData.teacherName = user.fullName;
     if (userCourse){
       formData.courseId = userCourse.id;
     }
@@ -68,6 +71,10 @@ const CreateNewExam = () => {
     navigate("/teacher-dashboard");
   };
 
+  const handleSaveExamLocally = () => {
+    setSaveExam(true);
+  };
+
   return (
     <Card>
       <Card.Body>
@@ -88,6 +95,10 @@ const CreateNewExam = () => {
             {showCreateQuestion && (
               <CreateNewQuestion examId={examId} />
             )}
+            <Button className="mt-3 mb-3" variant="primary" onClick={handleSaveExamLocally}>
+                Save Exam Locally
+            </Button>
+            {saveExam && ( <SaveExamLocally examId={examId}/>)}
           </div>
         )}
         <>

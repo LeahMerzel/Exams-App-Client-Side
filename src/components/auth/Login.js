@@ -19,7 +19,6 @@ const Login = () => {
   };
 
   if (userRole) {
-    console.log("userRole", userRole)
     switch (userRole) {
       case "Admin":
         navigate("/admin-dashboard");

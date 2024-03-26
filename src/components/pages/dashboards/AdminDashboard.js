@@ -63,12 +63,6 @@ const AdminDashboard = () => {
           {showCreateCourse && <CreateNewCourse  />}
           </Col>
         </Row>
-        <Row>
-          <Col xs={12} md={12} lg={12} className="mb-5">
-          <h4>All App Exams</h4>
-          <GetAllExams />
-          </Col>
-        </Row>
         </>
       )}
     </Container>

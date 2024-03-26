@@ -1,16 +1,18 @@
+// GetAllUsers.js
+
 import React, { useState } from "react";
 import useFetch from "../hooks/useFetch";
+import { Spinner, Alert, Card, Modal, Button } from "react-bootstrap";
 import useFilterableTable from "../hooks/useFilterableTable";
 import DataTable from "../filterableTable/DataTable";
 import SearchBar from '../filterableTable/SearchBar';
 import UpdateUser from "./UpdateUser";
-import { Spinner, Alert, Card, Modal, Button } from "react-bootstrap";
 import RemoveUser from "./RemoveUser";
 
 const GetAllUsers = () => {
     const getAllUsersApiUrl = "https://localhost:7252/api/User/get-all";
-    const { data: users, isLoading, error } = useFetch(getAllUsersApiUrl);
-    const { filterText, setFilterText, filteredData } = useFilterableTable(users);
+    const { data: users, isLoading, error, refetch } = useFetch(getAllUsersApiUrl);
+    const { filterText, setFilterText, filteredData } = useFilterableTable(users || []);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -30,6 +32,15 @@ const GetAllUsers = () => {
         setShowDeleteModal(false);
         setShowEditModal(false);
     };
+
+    const handleUserRemoved = () => {
+        refetch(); // Refetch users data after delete
+        handleCloseModal(); // Close the modal after successful delete
+    };
+
+    const handleFormClose = () => {
+        setShowEditModal(false); // Close the edit modal
+    };
   
     return (
         <Card>
@@ -47,7 +58,7 @@ const GetAllUsers = () => {
                                 <Modal.Title>Edit User</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                {!!selectedUserId && <UpdateUser userId={selectedUserId} />}
+                                {!!selectedUserId && <UpdateUser userId={selectedUserId} onFormClose={handleFormClose} />}
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseModal}>
@@ -60,7 +71,7 @@ const GetAllUsers = () => {
                                 <Modal.Title>Delete User</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                {!!selectedUserId && <RemoveUser userId={selectedUserId} />}
+                                {!!selectedUserId && <RemoveUser userId={selectedUserId} onRemoveSuccess={handleUserRemoved} />}
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseModal}>

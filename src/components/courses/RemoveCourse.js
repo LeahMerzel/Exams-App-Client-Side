@@ -1,32 +1,33 @@
+// RemoveCourse.js
+
 import React from "react";
+import { Button, Alert } from "react-bootstrap";
 import useDelete from "../hooks/useDelete";
-import { Button, Spinner, Alert } from "react-bootstrap";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-const RemoveCourse = ( courseId ) => {
-    const removeCourseUrl = `https://localhost:7252/api/Course/delete-${courseId}`;
-    const { deleteEntity, isLoading, error } = useDelete(removeCourseUrl);
+const RemoveCourse = ({ courseId, onRemoveSuccess }) => {
+  const removeCourseApiUrl = `https://localhost:7252/api/Course/delete-${courseId}`;
+  const { deleteEntity, isLoading: isRemoving, error: removeError } = useDelete(removeCourseApiUrl);
 
-    const handleDelete = async () => {
-        try {
-            await deleteEntity();
-            toast.success("course deleted successfully")
-        } catch (error) {
-            console.error("Error removing course: ", error);
-            toast.error("did not delete course.")
-        }
-    };
+  const handleRemove = async () => {
+    try {
+      await deleteEntity();
+      // Handle success
+      onRemoveSuccess(); // Trigger action after successful delete
+    } catch (error) {
+      console.error('Delete failed:', error.message);
+      // Handle error
+    }
+  };
 
-    return (
-        <>
-            {isLoading && <Spinner animation="border" />}
-            {error && <Alert variant="danger">Error: {error}</Alert>}
-            <Button variant="danger" onClick={handleDelete} disabled={isLoading}>
-                {isLoading ? 'Deleting...' : 'Delete'}
-            </Button>
-        </>
-    );
+  return (
+    <div>
+      {removeError && <Alert variant="danger">Error: {removeError}</Alert>}
+      <p>Are you sure you want to delete this course?</p>
+      <Button variant="danger" onClick={handleRemove} disabled={isRemoving}>
+        {isRemoving ? 'Deleting...' : 'Delete'}
+      </Button>
+    </div>
+  );
 };
 
 export default RemoveCourse;

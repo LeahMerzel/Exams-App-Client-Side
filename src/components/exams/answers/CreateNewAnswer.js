@@ -18,7 +18,6 @@ const CreateNewAnswer = ({questionId}) => {
       
     const onSubmit = async (formData) => {
       formData.questionId = questionId;
-      console.log("questionid", formData.questionId )
       if (!formData.questionId) return;
       const response = await createEntity(formData);
       if (response){
