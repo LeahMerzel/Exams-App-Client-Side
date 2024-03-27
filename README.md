@@ -24,17 +24,16 @@ the backend application can be found <a href="https://github.com/LeahMerzel/Exam
 
 - Once you have these dependencies installed, follow these steps:
 
-  - Clone this repository to your local machine.
+- Clone the repository to your local machine using the following command:
+
+```bash
+https://github.com/LeahMerzel/Exams-App-Client-Side.git
+```
+  - instead of main branch, navigate to master.
+  - open the code with Visual Studio.
   - Open a terminal in the project directory.
   - Run npm install to install the project's dependencies:
   
-  <br>
-  
-  ```bash
-  npm i --lagacy-peer-deps
-  
-  ```
-
 ## Usage
 
 - To use the application, you will need to have a web browser on desktop or an Android or iOS device or an emulator. 
