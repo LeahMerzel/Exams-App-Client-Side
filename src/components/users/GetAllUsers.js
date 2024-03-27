@@ -34,12 +34,12 @@ const GetAllUsers = () => {
     };
 
     const handleUserRemoved = () => {
-        refetch(); // Refetch users data after delete
-        handleCloseModal(); // Close the modal after successful delete
+        refetch(); 
+        handleCloseModal(); 
     };
 
     const handleFormClose = () => {
-        setShowEditModal(false); // Close the edit modal
+        setShowEditModal(false); 
     };
   
     return (

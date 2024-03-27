@@ -11,11 +11,9 @@ const RemoveCourse = ({ courseId, onRemoveSuccess }) => {
   const handleRemove = async () => {
     try {
       await deleteEntity();
-      // Handle success
-      onRemoveSuccess(); // Trigger action after successful delete
+      onRemoveSuccess(); 
     } catch (error) {
       console.error('Delete failed:', error.message);
-      // Handle error
     }
   };
 

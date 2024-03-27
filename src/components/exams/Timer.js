@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, ProgressBar } from "react-bootstrap";
 
 const Timer = ({ duration }) => {
-  const [timeLeft, setTimeLeft] = useState(duration * 60); // Convert duration from minutes to seconds
+  const [timeLeft, setTimeLeft] = useState(duration * 60); 
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -14,10 +14,10 @@ const Timer = ({ duration }) => {
           return 0;
         }
       });
-    }, 1000); // Set interval to 1 second
+    }, 1000); 
 
     return () => clearInterval(interval);
-  }, [duration]); // Add duration as dependency to recalculate when it changes
+  }, [duration]);
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -25,7 +25,7 @@ const Timer = ({ duration }) => {
     return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const progress = ((duration * 60 - timeLeft) / (duration * 60)) * 100; // Calculate progress based on total duration
+  const progress = ((duration * 60 - timeLeft) / (duration * 60)) * 100; 
 
   return (
     <Container>

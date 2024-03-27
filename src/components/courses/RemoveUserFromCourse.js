@@ -13,7 +13,7 @@ const RemoveUserFromCourse = ({ onRemoveConfirmation }) => {
 
   const handleRemoveUserFromCourse = async () => {
     try {
-      if (!userCourse || !user || !userCourse.id) { // Add additional check for userCourse.id
+      if (!userCourse || !user || !userCourse.id) { 
         return;
       }
       setDeleteLoading(true);

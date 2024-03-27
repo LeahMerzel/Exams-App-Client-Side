@@ -11,7 +11,7 @@ const UpdateAnswer = (answerId) => {
     const fields = [
         { name: "answerNumber", label: "Answer Number", type: "number" },
         { name: "answerDescription", label: "Answer Description", type: "text" },
-        { name: "isCorrect", label: "Is The Answer Correct", type: "checkbox", checked: answerIsCorrect, onChange: () => setAnswerIsCorrect(!answerIsCorrect) }, 
+        { name: "isCorrect", label: "Is The Answer Correct", type: "checkbox", checked: answerIsCorrect, onChange: () => setAnswerIsCorrect(!answerIsCorrect) }
       ];
 
     const onSubmit = async (formData) => {

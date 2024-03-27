@@ -4,18 +4,20 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useFetch from '../hooks/useFetch';
 import useUpdate from "../hooks/useUpdate";
+import {useUser} from '../auth/UserContext';
 
 const UpdateUser = ({ onFormClose, userId }) => {
-  const getUserApiUrl = `https://localhost:7252/api/User/get-by-id/${userId}`;
+  const {user} = useUser()
+  let userid = userId? userId : user.id;
+  const getUserApiUrl = `https://localhost:7252/api/User/get-by-id/${userid}`;
   const { data: userToUpdate } = useFetch(getUserApiUrl);
   const updateUserApiUrl = `https://localhost:7252/api/Auth/update`;
   const { updateEntity, isLoading, error } = useUpdate(updateUserApiUrl);
   const [formData, setFormData] = useState({});
-  const [showForm, setShowForm] = useState(true); // State to control the visibility of the update form
+  const [showForm, setShowForm] = useState(true);
 
   useEffect(() => {
     if (userToUpdate) {
-      // Exclude fields teachersExams, studentsTakenExams, and studentGradeAvg
       const { teachersExams, studentsTakenExams, studentGradeAvg, ...formDataWithoutExcluded } = userToUpdate;
       setFormData(formDataWithoutExcluded);
     }
@@ -32,8 +34,8 @@ const UpdateUser = ({ onFormClose, userId }) => {
       const response = await updateEntity(formData);
       if (response) {
         toast.success('Update successful!');
-        setShowForm(false); // Close the update form
-        onFormClose(); // Callback to indicate that the form is closed
+        setShowForm(false); 
+        onFormClose();
       }
     } catch (error) {
       console.error('Update failed:', error.message);

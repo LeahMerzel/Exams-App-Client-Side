@@ -31,7 +31,7 @@ const FormField = ({ label, type, value, onChange, options }) => {
           <BootstrapForm.Check
             type={type}
             checked={value} 
-            onChange={handleChange} // This line wires up the checkbox with handleChange
+            onChange={handleChange} 
             label={label}
           />
         ) : (

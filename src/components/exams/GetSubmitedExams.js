@@ -9,7 +9,7 @@ import GetQuestionsFailed from "./questions/GetQuestionsFailed";
 
 const GetSubmitedExams = () => {
     const { userRole, user } = useUser();
-    const [studentExamId, setStudentExamId] = useState(null); // Initialize with null
+    const [studentExamId, setStudentExamId] = useState(null); 
 
     let getAllStudentExamsApiUrl = userRole === "Teacher" 
         ? `https://localhost:7252/api/Exam/${user.id}/submitted-student-exams`

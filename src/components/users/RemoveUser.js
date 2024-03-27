@@ -11,11 +11,9 @@ const RemoveUser = ({ userId, onRemoveSuccess }) => {
   const handleDelete = async () => {
     try {
       await deleteEntity();
-      // Handle success
-      onRemoveSuccess(); // Trigger action after successful delete
+      onRemoveSuccess(); 
     } catch (error) {
       console.error("Error removing user: ", error);
-      // Handle error
     }
   };
 

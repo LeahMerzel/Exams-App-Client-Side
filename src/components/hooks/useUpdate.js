@@ -2,10 +2,8 @@ import { useState } from 'react';
 import { updateEntityAPI } from '../api/CrudApi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import {useUser} from '../auth/UserContext';
 
 const useUpdate = (apiUrl) => {
-  // const {token} = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 

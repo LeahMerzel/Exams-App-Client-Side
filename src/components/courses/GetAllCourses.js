@@ -8,7 +8,6 @@ import DataTable from "../filterableTable/DataTable";
 import SearchBar from '../filterableTable/SearchBar';
 import UpdateCourse from "./UpdateCourse";
 import RemoveCourse from "./RemoveCourse";
-import GetCourseExams from './GetCourseExams';
 
 const GetAllCourses = () => {
     const getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
@@ -35,13 +34,13 @@ const GetAllCourses = () => {
     };
 
     const handleCourseUpdated = () => {
-        refetch(); // Refetch courses data after update
+        refetch(); 
     };
 
     
     const handleCourseRemoved = () => {
-        refetch(); // Refetch courses data after delete
-        handleCloseModal(); // Close the modal after successful delete
+        refetch(); 
+        handleCloseModal(); 
     };
   
     return (

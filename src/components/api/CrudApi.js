@@ -1,26 +1,4 @@
 // CrudApi.js
-
-// export const createEntityAPI = async (apiUrl, requestBody) => {
-//     try {
-//       const response = await fetch(apiUrl, {
-
-//         method: 'POST',
-//         headers: {
-//           //'Authorization': `Bearer ${token}`,
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(requestBody),
-//       });
-  
-//       if (!response.ok) {
-//         throw new Error('Failed to create entity');
-//       }
-  
-//       return await response.json();
-//     } catch (error) {
-//       throw new Error(error.message);
-//     }
-//   };
   
   export const updateEntityAPI = async (apiUrl, entityToUpdate) => {
     console.log("update entityToUpdate", entityToUpdate)
@@ -29,7 +7,6 @@
 
         method: 'PUT',
         headers: {
-          // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(entityToUpdate), 
@@ -51,7 +28,6 @@
 
       method: 'GET',  
       headers: {
-        // 'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -71,7 +47,6 @@
 
         method: 'DELETE',
         headers: {
-          // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });

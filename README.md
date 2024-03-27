@@ -1,70 +1,82 @@
-# Getting Started with Create React App
+# Exams App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Exams App is a web application designed to effortlessly streamline exam creation and taking.
+Teachers are provided with the tools to create, edit, update, and delete exams,   as well as getting statistics of each exam. They have a dashboard where they can manage user details, see the course they teach in, the students enrolled, and well as manage their exams.
+Students are able to manage user and course details, see upcoming exams, tale exams, and get results instantly, including failed questions with correct answers!
+Admin can manage users and courses, with the tools to create, edit, update, and delete users and courses.
+The application is a ReactJs UI interacting with an Asp.Net web Api server, while storing all data in a database.<br>
+the backend application can be found <a href="https://github.com/LeahMerzel/Exams-App-C-.Net-Server">here</a>.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+[Installation](#installation) <br>
+[usage](#usage) <br>
+[Features](#features) <br>
+[Code Features](#code-features) <br>
+[Troubleshooting](#troubleshooting)
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- To run the application, you will need to have the following software installed on your computer:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+  - Node.js (v12.13.0 or higher)
+  - Web Browser/Android/Ios/Emulator
 
-### `npm test`
+- Once you have these dependencies installed, follow these steps:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  - Clone this repository to your local machine.
+  - Open a terminal in the project directory.
+  - Run npm install to install the project's dependencies:
+  
+  <br>
+  
+  ```bash
+  npm i --lagacy-peer-deps
+  
+  ```
 
-### `npm run build`
+## Usage
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- To use the application, you will need to have a web browser on desktop or an Android or iOS device or an emulator. 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- User begins in the app’s home page, where he chooses which type of user he is: Teacher, Student, or Admin.
+- next he chooses between login and register for a new user.
+- then he lands on a dashboard providing data and tools appropriate to user type.
+- All dashboard provide user details and option to edit them and logout.
+- Admin dashboard includes: viewing courses + ability to edit and delete, viewing users + ability to edit and delete.
+- Teacher dashboard includes enrolling in a course to teach in, course details, viewing teacher’s exams + edit and delete, creating new exams, seeing statistics on exams, viewing all students.
+- Student dashboard includes enrolling in a course, course details, viewing upcoming exams + option to take exam, viewing all student’s taken exams + failed questions with correct answers.
 
-### `npm run eject`
+## Code Features:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+This frontend code is a fully responsive web UI, written in ReactJs.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Components divided in folders as follows:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+api: calls to api
+auth: handling authentication, and user details in Context
+courses: handling courses CRUD operations
+exams: handling exams, question, and answers CRUD operations
+filterable-Table: handling rendering data in table, and filtering it
+forms: handling rendering forms
+hooks: custom hooks
+images
+layout: across-app screen layout
+pages: app pages and dashboards
+users: handling users CRUD operations
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Packages and Concepts I used:
 
-## Learn More
+react-router-dom for navigation/ routing
+react-bootstrap for styling
+react-toastify for notifications
+font-awesome for icons
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Context used for holding the logged-in user’s details.
+Custom hooks created to reduce code redundancy.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Troubleshooting
+If you encounter any issues when using or installing ExamsApp application, please refer to the project's GitHub Issues page to see if a solution has already been proposed. If not, you can open a new issue to report the problem.

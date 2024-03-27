@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const userDataString = localStorage.getItem('user');
-    const userCourseString = localStorage.getItem('userCourse'); // Retrieve userCourse from localStorage
+    const userCourseString = localStorage.getItem('userCourse'); 
 
     if (userDataString) {
       const userData = JSON.parse(userDataString);
@@ -73,11 +73,11 @@ export const UserProvider = ({ children }) => {
     
   const logout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('userCourse'); // Remove userCourse from localStorage upon logout
+    localStorage.removeItem('userCourse'); 
     setUser(null);
     setUserRole(null);
     setUserLoggedIn(false);
-    setUserCourse(null); // Set userCourse to null upon logout
+    setUserCourse(null); 
     navigate('/');
   };
 

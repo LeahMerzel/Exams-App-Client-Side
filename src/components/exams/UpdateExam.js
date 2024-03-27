@@ -41,7 +41,6 @@ const UpdateExam = ({ examId, onUpdateSuccess }) => {
   if (isLoadingExam || isLoadingUpdate) return <Spinner animation="border" />;
   if (examError || updateError) return <Alert variant="danger">Error: {examError || updateError}</Alert>;
   
-  // Conditional rendering block to check if entireExam exists
   if (!entireExam) return null;
 
   const excludedProperties = ['id', 'createdAt', 'examGradeAvg', 'teacherId', 'studentsExams', 'wasExamLoggedInToByStudent'];

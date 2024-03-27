@@ -7,7 +7,7 @@ import useFetch from "../hooks/useFetch";
 
 const UpdateCourse = ({ courseId, onUpdateSuccess, onHideModal }) => {
   const getCourseApiUrl = `https://localhost:7252/api/Course/get-by-id/${courseId}/`;
-  const { data: course, isLoading: isLoadingCourse, error: courseError, refetch } = useFetch(getCourseApiUrl);
+  const { data: course, isLoading: isLoadingCourse, error: courseError } = useFetch(getCourseApiUrl);
   const updateCourseApiUrl = "https://localhost:7252/api/Course/update";
   const { updateEntity, isLoading: isLoadingUpdate, error: updateError } = useUpdate(updateCourseApiUrl);
 
@@ -15,7 +15,6 @@ const UpdateCourse = ({ courseId, onUpdateSuccess, onHideModal }) => {
 
   useEffect(() => {
     if (course) {
-      // Exclude the 'exams' property from formData
       const { exams, ...courseDataWithoutExams } = course;
       setFormData(courseDataWithoutExams);
     }
@@ -30,12 +29,10 @@ const UpdateCourse = ({ courseId, onUpdateSuccess, onHideModal }) => {
     e.preventDefault();
     try {
       await updateEntity(formData);
-      // Handle success
-      onUpdateSuccess(); // Trigger refetch of courses data and close modal
-      onHideModal(); // Close the modal
+      onUpdateSuccess(); 
+      onHideModal();
     } catch (error) {
       console.error('Update failed:', error.message);
-      // Handle error
     }
   };
 

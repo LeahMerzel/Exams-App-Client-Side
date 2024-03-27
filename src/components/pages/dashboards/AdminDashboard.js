@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
-import GetAllExams from '../../exams/GetAllExams';
 import GetAllCourses from '../../courses/GetAllCourses';
 import { useUser } from '../../auth/UserContext';
 import CreateNewCourse from '../../courses/CreateNewCourse';
-import CreateNewExam from '../../exams/CreateNewExam';
 import CreateNewUser from '../../users/CreateNewUser';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GetAllUsers from '../../users/GetAllUsers';

@@ -59,12 +59,12 @@ const CreateNewExam = () => {
 
   const handleCreateQuestion = () => {
     if (examSubmitted) {
-      setShowCreateQuestion(true); // Show the CreateNewQuestion component
+      setShowCreateQuestion(true); 
     }
   };
 
   const handleClose = () => {
-    setShowForm((prevShowForm) => !prevShowForm); // Toggle the showForm state
+    setShowForm((prevShowForm) => !prevShowForm); 
   };
 
   const handleGoBack = () => {

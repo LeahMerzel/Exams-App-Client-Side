@@ -11,7 +11,6 @@ const Header = () => {
   const { userLoggedIn, logout } = useUser();
 
   const handleLogout = () => {
-    // Call the logout function when the logout link is clicked
     logout();
   };
 

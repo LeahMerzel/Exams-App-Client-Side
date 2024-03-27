@@ -11,7 +11,7 @@ const CreateNewQuestion = ({ examId }) => {
     const { createEntity, isLoading, error  } = useCreate(createQuestionApiUrl);
     const [ answersOrderRandom, setAnswersOrderRandom] = useState(false); 
     const [ questionId, setQuestionId] = useState();
-    const [ showCreateAnswer, setShowCreateAnswer] = useState(false); // State to control CreateNewAnswer visibility
+    const [ showCreateAnswer, setShowCreateAnswer] = useState(false); 
 
     const fields = [
         { name: "questionNumber", label: "Question Number", type: "number" },
@@ -34,7 +34,7 @@ const CreateNewQuestion = ({ examId }) => {
     };
 
     const handleAddAnswer = () => {
-        setShowCreateAnswer(true); // Show the CreateNewAnswer component when the button is clicked
+        setShowCreateAnswer(true); 
     };
 
     return (
