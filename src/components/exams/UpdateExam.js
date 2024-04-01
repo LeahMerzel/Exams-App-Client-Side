@@ -6,9 +6,9 @@ import useFetch from "../hooks/useFetch";
 import useUpdate from "../hooks/useUpdate";
 
 const UpdateExam = ({ examId, onUpdateSuccess }) => {
-  const entireExamApiUrl = `https://localhost:7252/api/Exam/${examId}/questions-answers`;
-  const { data: entireExam, isLoading: isLoadingExam, error: examError } = useFetch(entireExamApiUrl);
-  const updateExamApiUrl = "https://localhost:7252/api/Exam/update";
+  const entireExamApiUrl = `https://localhost:7252/api/Exam/${examId}/exam-questions-answers`;
+  const { data: entireExam, isLoading: isLoadingExam, error: examError, refetch } = useFetch(entireExamApiUrl);
+  const updateExamApiUrl = "https://localhost:7252/api/Exam/update-exam-questions-answers";
   const { updateEntity, isLoading: isLoadingUpdate, error: updateError } = useUpdate(updateExamApiUrl);
 
   const [formData, setFormData] = useState({});
@@ -21,7 +21,14 @@ const UpdateExam = ({ examId, onUpdateSuccess }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const [fieldName, fieldIndex, subFieldName] = name.split('.');
+    if (fieldIndex !== undefined && subFieldName !== undefined) {
+      const updatedData = { ...formData };
+      updatedData[fieldName][fieldIndex][subFieldName] = value;
+      setFormData(updatedData);
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const onSubmit = async (e) => {
@@ -29,7 +36,9 @@ const UpdateExam = ({ examId, onUpdateSuccess }) => {
     try {
       const response = await updateEntity(formData);
       if (response) {
+        console.log(response)
         toast.success('Update successful!');
+        refetch();
         onUpdateSuccess();
       }
     } catch (error) {
@@ -43,7 +52,7 @@ const UpdateExam = ({ examId, onUpdateSuccess }) => {
   
   if (!entireExam) return null;
 
-  const excludedProperties = ['id', 'createdAt', 'examGradeAvg', 'teacherId', 'studentsExams', 'wasExamLoggedInToByStudent'];
+  const excludedProperties = ['id', 'createdAt', 'courseId', 'examGradeAvg', 'teacherId', 'studentsExams', 'wasExamLoggedInToByStudent'];
 
   return (
     <div>
@@ -58,7 +67,7 @@ const UpdateExam = ({ examId, onUpdateSuccess }) => {
                     <Form.Label>{`Question ${questionIndex + 1}`}</Form.Label>
                     <Form.Control
                       type="text"
-                      name={`examQuestions[${questionIndex}].questionDescription`}
+                      name={`examQuestions.${questionIndex}.questionDescription`}
                       value={question.questionDescription}
                       onChange={handleInputChange}
                     />
@@ -68,7 +77,7 @@ const UpdateExam = ({ examId, onUpdateSuccess }) => {
                       <Form.Label>{`Answer ${answerIndex + 1}`}</Form.Label>
                       <Form.Control
                         type="text"
-                        name={`examQuestions[${questionIndex}].answers[${answerIndex}].answerDescription`}
+                        name={`examQuestions.${questionIndex}.answers.${answerIndex}.answerDescription`}
                         value={answer.answerDescription}
                         onChange={handleInputChange}
                       />

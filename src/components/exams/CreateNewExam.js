@@ -7,7 +7,7 @@ import { useUser } from "../auth/UserContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SaveExamLocally from "./SaveExamLocally";
+import {fetchEntityAPI} from '../api/CrudApi';
 
 const CreateNewExam = () => {
   const { userCourse, user } = useUser();
@@ -15,20 +15,21 @@ const CreateNewExam = () => {
   const { createEntity, isLoading, error } = useCreate(createExamApiUrl);
   const [showForm, setShowForm] = useState(true); 
   const [questionsOrderRandom, setQuestionsOrderRandom] = useState(true);
-  const [examId, setExamId] = useState();
+  const [examId, setExamId] = useState(null);
   const [showCreateQuestion, setShowCreateQuestion] = useState(false); 
   const [examSubmitted, setExamSubmitted] = useState(false);
-  const [saveExam, setSaveExam]  = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
   const navigate = useNavigate();
 
   const fields = [
-    { name: "examName", label: "Exam Name", type: "text" },
+    { name: "examName", label: "Exam Name", type: "text", required: true },
     { name: "examDescription", label: "Exam Description", type: "text" },
-    { name: "startExamDateTime", label: "Exam Date and Time", type: "datetime-local" },
+    { name: "startExamDateTime", label: "Exam Date and Time", type: "datetime-local", required: true },
     {
       name: "examDurationInMinutes",
       label: "Exam Duration In Minutes",
       type: "number",
+      required: true
     },
     {
       name: "IsOrderQuestionsRandom",
@@ -40,6 +41,17 @@ const CreateNewExam = () => {
   ];
 
   const onSubmit = async (formData) => {
+    const requiredFields = fields.filter(field => field.required);
+    const missingFields = requiredFields.filter(field => !formData[field.name]);
+    if (missingFields.length > 0) {
+      const errors = {};
+      missingFields.forEach(field => {
+        errors[field.name] = `${field.label} is required`;
+      });
+      setValidationErrors(errors);
+      return;
+    }
+
     formData.teacherId = user.id;
     formData.teacherName = user.fullName;
     if (userCourse){
@@ -72,7 +84,25 @@ const CreateNewExam = () => {
   };
 
   const handleSaveExamLocally = () => {
-    setSaveExam(true);
+    const getExamApiUrl = `https://localhost:7252/api/Exam/get-by-id/${examId}`;
+    console.log(getExamApiUrl)
+    const exam = fetchEntityAPI(getExamApiUrl);
+    if (!exam || !examId) return;
+    try {
+      const jsonExam = JSON.stringify(exam);
+      const blob = new Blob([jsonExam], { type: "application/json" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${exam.examName}.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      toast.success('Exam saved locally!');
+    } catch (error) {
+      console.error('Error saving exam locally:', error.message);
+      toast.error('Error saving exam locally. Please try again.');
+    }
   };
 
   return (
@@ -88,17 +118,17 @@ const CreateNewExam = () => {
               onSubmit={onSubmit}
               entityName={"Exam"}
               onRender={handleCreateQuestion}
+              validationErrors={validationErrors}
             />
             {!showCreateQuestion && !examSubmitted && (
               <p>Please submit exam to proceed with adding questions to exam</p>
             )}
-            {showCreateQuestion && (
+            {examId && showCreateQuestion && (
               <CreateNewQuestion examId={examId} />
             )}
             <Button className="mt-3 mb-3" variant="primary" onClick={handleSaveExamLocally}>
-                Save Exam Locally
+              Save Exam Locally
             </Button>
-            {saveExam && ( <SaveExamLocally examId={examId}/>)}
           </div>
         )}
         <>

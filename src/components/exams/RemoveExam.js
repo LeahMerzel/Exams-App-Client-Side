@@ -2,13 +2,14 @@ import React from "react";
 import useDelete from "../hooks/useDelete";
 import { Button, Spinner, Alert } from "react-bootstrap";
 
-const RemoveExam = ( {examId} ) => {
+const RemoveExam = ( {examId, onDeleteSuccess} ) => {
     const removeExamUrl = `https://localhost:7252/api/Exam/delete-${examId}`;
     const { deleteEntity, isLoading, error } = useDelete(removeExamUrl);
 
     const handleDelete = async () => {
         try {
             await deleteEntity();
+            onDeleteSuccess();
         } catch (error) {
             console.error("Error removing exam: ", error);
         }

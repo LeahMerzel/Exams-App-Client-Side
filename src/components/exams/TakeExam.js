@@ -49,16 +49,25 @@ const TakeExam = () => {
       grade: grade,
       wasExamLoggedInToByStudent: true
     };
+  
     const response = await createEntity(studentExamData);
-    if (response){
+    if (response) {
       setExamSubmitted(true);
-        await PushToQuestionsFailed({ studentExamId: response.id, failedQuestions: failedQuestions });
-        alert("You've Successfully Submitted Your Exam.");
-        navigate("/student-dashboard");
-        }
-       
+      
+      // Loop over failedQuestions and add studentExamId property to each object
+      const updatedFailedQuestions = failedQuestions.map(question => ({
+        ...question,
+        studentExamId: response.id
+      }));
+  
+      // Call the API to push failed questions with updated data
+      await PushToQuestionsFailed({ studentExamId: response.id, failedQuestions: updatedFailedQuestions });
+  
+      alert("You've Successfully Submitted Your Exam.");
+      navigate("/student-dashboard");
+    }
   };
-
+  
   const updateGradeAndFailedQuestions = (failedQuestionsList) => {
     setStartExam(false);
     setFailedQuestions(failedQuestionsList);

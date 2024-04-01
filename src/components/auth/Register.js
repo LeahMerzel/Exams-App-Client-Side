@@ -10,17 +10,25 @@ const Register = () => {
   const [error, setError] = useState(null);
 
   const fields = [
-    { name: 'UserName', label: 'Username', type: 'text', regex: /^[a-zA-Z0-9_]+$/ },
+    { name: 'UserName', label: 'Username', type: 'text', regex: /^[a-zA-Z0-9_]+$/, hint: 'Username can only contain letters, numbers, and underscores.' },
     { name: 'FullName', label: 'Full Name', type: 'text' },
-    { name: 'Email', label: 'Email Address', type: 'email' },
-    { name: 'PasswordHash', label: 'Password', type: 'password', regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/ },
-    { name: 'UserRole', label: 'User Role', type: 'select', options: ['Admin', 'Teacher', 'Student'] }
+    { name: 'Email', label: 'Email Address', type: 'email', regex: /^\S+@\S+\.\S+$/, hint: 'Please enter a valid email address.' },
+    { name: 'PasswordHash', label: 'Password', type: 'password', regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, hint: 'Password must be at least 8 characters long and contain at least one letter and one number.' },
+    { name: 'UserRole', label: 'User Role', type: 'select', options: ['please choose role from below','Teacher', 'Student'] }
   ];
-
+  
   const handleSubmit = async (formData) => {
+    // Validate the form data
+    const isValid = validateFormData(formData);
+  
+    if (!isValid) {
+      // If the form data is not valid, return early
+      return;
+    }
+  
     try {
       const response = await register(formData);
-      if (response ) {
+      if (response) {
         toast.success('Registration successful!');
       }
     } catch (error) {
@@ -29,7 +37,7 @@ const Register = () => {
       toast.error('Registration failed. Please try again.');
     }
   };
-
+  
   const validateFormData = (formData) => {
     for (const field of fields) {
       const { name, regex } = field;

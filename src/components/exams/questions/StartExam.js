@@ -4,12 +4,15 @@ import useFetch from "../../hooks/useFetch";
 
 const StartExam = ({ questionId, questionNumber, questionDescription, questionScoring, onEndExam }) => {
   const [answers, setAnswers] = useState([]);
-  const [failedQuestions, setFailedQuestions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(() => {
     const storedAnswer = localStorage.getItem(`selectedAnswer_${questionId}`);
     return storedAnswer ? JSON.parse(storedAnswer) : null;
   });
-  const [examEnded, setExamEnded] = useState(false); 
+  const [examEnded, setExamEnded] = useState(false);
+  const [failedQuestions, setFailedQuestions] = useState(() => {
+    const storedFailedQuestions = JSON.parse(localStorage.getItem('failedQuestions'));
+    return storedFailedQuestions ? storedFailedQuestions : [];
+  });
 
   const getAnswersApiUrl = `https://localhost:7252/api/Question/${questionId}/answers`;
   const { data: answersData, isLoading: isLoadingAnswers, error: answersError } = useFetch(getAnswersApiUrl);
@@ -20,35 +23,46 @@ const StartExam = ({ questionId, questionNumber, questionDescription, questionSc
     }
   }, [answersData]);
 
-  useEffect(() => {
-    localStorage.setItem(`selectedAnswer_${questionId}`, JSON.stringify(selectedAnswer));
-  }, [selectedAnswer, questionId]);
-
   const handleAnswerSelection = (answer) => {
     setSelectedAnswer(answer);
-    if (!answer.isCorrect) {
+    localStorage.setItem(`selectedAnswer_${questionId}`, JSON.stringify(answer));
+    
+    if (answer.isCorrect === false) {
       const correctAnswer = answers.find((ans) => ans.isCorrect);
-      const questionInfo = {
-        questionNumber: questionNumber,
-        questionDescription: questionDescription,
-        questionScoring: questionScoring,
-        correctAnswerDescription: correctAnswer.answerDescription
-      };
-      if (!failedQuestions.some((question) => question.questionNumber === questionInfo.questionNumber)) {
-        setFailedQuestions((prevFailedQuestions) => [...prevFailedQuestions, questionInfo]);
+      if (correctAnswer) {
+        const failedQuestionInfo = {
+          questionNumber: questionNumber,
+          questionDescription: questionDescription,
+          questionScoring: questionScoring,
+          correctAnswerNumber: correctAnswer.answerNumber,
+          correctAnswerDescription: correctAnswer.answerDescription,
+          chosenWrongAnswerNumber: answer.answerNumber,
+          chosenWrongAnswerDescription: answer.answerDescription
+        };
+        
+        localStorage.setItem('failedQuestions', JSON.stringify([...failedQuestions, failedQuestionInfo]));
+        setFailedQuestions(prevFailedQuestions => [...prevFailedQuestions, failedQuestionInfo]);
       }
     }
   };
   
-  const handleEndExam = () => {
+  const handleEndExam = async () => {
     if (!selectedAnswer) {
-      alert("Please select an answer before submitting the exam.");
+      alert("Please select an answer for each question before submitting the exam.");
       return;
     }
+    console.log(failedQuestions);
     onEndExam(failedQuestions);
-    setExamEnded(true); 
+    setExamEnded(true);
+    
+    // Dynamically fetch keys from local storage and remove selected answers
+    Object.keys(localStorage)
+      .filter(key => key.startsWith('selectedAnswer_'))
+      .forEach(key => localStorage.removeItem(key));
+    
+    localStorage.removeItem('failedQuestions'); // Remove stored failed questions after exam ends
   };
-
+  
   if (isLoadingAnswers) {
     return <Spinner animation="border" />;
   }
@@ -71,7 +85,7 @@ const StartExam = ({ questionId, questionNumber, questionDescription, questionSc
               <input
                 type="radio"
                 name="answer"
-                value={answer.id}
+                value={answer}
                 checked={selectedAnswer && selectedAnswer.id === answer.id}
                 onChange={() => handleAnswerSelection(answer)}
               />
@@ -80,7 +94,7 @@ const StartExam = ({ questionId, questionNumber, questionDescription, questionSc
           </div>
         ))}
       </div>
-      <br/>
+      <br />
       {!examEnded && <Button onClick={handleEndExam}>End Exam and Get Grade</Button>}
     </div>
   );

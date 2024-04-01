@@ -1,7 +1,6 @@
 // CrudApi.js
   
   export const updateEntityAPI = async (apiUrl, entityToUpdate) => {
-    console.log("update entityToUpdate", entityToUpdate)
     try {
       const response = await fetch(apiUrl, {
 

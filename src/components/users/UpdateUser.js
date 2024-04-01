@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Spinner, Alert, Button, Form } from "react-bootstrap";
+import { Spinner, Alert, Button, Form, Modal } from "react-bootstrap";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useFetch from '../hooks/useFetch';
 import useUpdate from "../hooks/useUpdate";
 import {useUser} from '../auth/UserContext';
 
-const UpdateUser = ({ onFormClose, userId }) => {
+const UpdateUser = ({ userId, onFormClose }) => {
   const {user} = useUser()
   let userid = userId? userId : user.id;
   const getUserApiUrl = `https://localhost:7252/api/User/get-by-id/${userid}`;
@@ -15,10 +15,11 @@ const UpdateUser = ({ onFormClose, userId }) => {
   const { updateEntity, isLoading, error } = useUpdate(updateUserApiUrl);
   const [formData, setFormData] = useState({});
   const [showForm, setShowForm] = useState(true);
+  const [showModal, setShowModal] = useState(true);
 
   useEffect(() => {
     if (userToUpdate) {
-      const { teachersExams, studentsTakenExams, studentGradeAvg, ...formDataWithoutExcluded } = userToUpdate;
+      const { id, createdAt, userRole, courseId, teachersExams, studentsTakenExams, studentGradeAvg, ...formDataWithoutExcluded } = userToUpdate;
       setFormData(formDataWithoutExcluded);
     }
   }, [userToUpdate]);
@@ -43,6 +44,11 @@ const UpdateUser = ({ onFormClose, userId }) => {
     }
   };
 
+  const handleModalClose = () => {
+    setFormData({});
+    setShowModal(false);
+  };
+
   return (
     <div>
       {showForm && (
@@ -50,20 +56,30 @@ const UpdateUser = ({ onFormClose, userId }) => {
           {isLoading && <Spinner animation="border" />}
           {error && <Alert variant="danger">Error: {error}</Alert>}
           {userToUpdate && (
-            <Form onSubmit={onSubmit}>
-              {Object.entries(formData).map(([key, value]) => (
-                <Form.Group key={key}>
-                  <Form.Label>{key}</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name={key}
-                    value={value}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
-              ))}
-              <Button type="submit">Submit</Button>
-            </Form>
+            <Modal show={showModal} onHide={handleModalClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Exam Confirmation</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form className="mt-3" onSubmit={onSubmit}>
+                  {Object.entries(formData).map(([key, value]) => (
+                    <Form.Group key={key}>
+                    <Form.Label>{key}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name={key}
+                      value={value}
+                      onChange={handleInputChange}
+                    />
+                    </Form.Group>
+                  ))}
+                  <Button className="mt-3" type="submit">Submit</Button>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleModalClose}>Cancel</Button>
+              </Modal.Footer>
+            </Modal>
           )}
         </>
       )}

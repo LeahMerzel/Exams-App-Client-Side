@@ -23,14 +23,19 @@ const GetUpcomingExams = () => {
     const studentsTakenExamsApiUrl = `https://localhost:7252/api/User/${user.id}/submitted-exams`;
     const { data: studentsTakenExams } = useFetch(studentsTakenExamsApiUrl);
 
-    const { filterText, setFilterText } = useFilterableTable(upcomingExams || []);
+    const { filterText, setFilterText, filteredData} = useFilterableTable(upcomingExams || []);
+    const excludedProperties = ['isOrderQuestionsRandom','examQuestions', 'studentsExams', 'examGradeAvg'];
+    const filteredDataWithoutExcludedProperties = filteredData.map(exam => {
+        const filteredExam = { ...exam };
+        excludedProperties.forEach(prop => delete filteredExam[prop]);
+        return filteredExam;
+    })
 
     useEffect(() => {
         const fetchCurrentDateTime = async () => {
             const response = await fetch('https://worldtimeapi.org/api/ip');
             const data = await response.json();
             const currentDateTime = data.datetime;
-            
             if (examsData && studentsTakenExams) {
                 const filteredExams = examsData.filter(exam => {
                     const isUpcomingExam = new Date(exam.startExamDateTime) > new Date(currentDateTime);
@@ -65,6 +70,10 @@ const GetUpcomingExams = () => {
         setShowModal(false);
     };
 
+    const handleFilterChange = (text) => {
+        setFilterText(text);
+    };    
+
     return (
         <Card>
             <Card.Body>
@@ -72,10 +81,10 @@ const GetUpcomingExams = () => {
                 {error && <Alert variant="danger">Error: {error}</Alert>}
                 {upcomingExams.length > 0 && (
                     <div>
-                        <SearchBar filterText={filterText} setFilterText={setFilterText} />
+                        <SearchBar filterText={filterText} setFilterText={handleFilterChange} />
                         <div style={{ overflowX: 'auto' }}>
                             <Alert className="mt-2" variant="primary" style={{ display: "inline-block" }}>DoubleClick to start an exam</Alert>
-                            <DataTable data={upcomingExams} onTakeExam={handleTakeExam} />
+                            <DataTable data={filteredDataWithoutExcludedProperties} onTakeExam={handleTakeExam} />
                         </div>
                         <Modal show={showModal} onHide={handleModalClose}>
                             <Modal.Header closeButton>

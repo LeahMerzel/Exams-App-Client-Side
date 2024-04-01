@@ -10,31 +10,43 @@ import { useUser } from "../auth/UserContext";
 import GetExamGradesAvg from "./GetExamGradesAvg";
 
 const GetAllExams = () => {
-    const { user, userRole } = useUser();
-    const getAllExamsApiUrl = userRole === "Admin"
-        ? "https://localhost:7252/api/Exam/get-all"
-        : `https://localhost:7252/api/User/${user.id}/teacher-exams`;
+    const { user } = useUser();
+    const getAllExamsApiUrl = `https://localhost:7252/api/User/${user.id}/teacher-exams`;
 
     const { data: exams, isLoading, error, refetch } = useFetch(getAllExamsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(exams || []);
+
+    const excludedProperties = ['examQuestions', 'studentsExams', 'examGradeAvg'];
+    const filteredDataWithoutExcludedProperties = filteredData.map(exam => {
+        const filteredExam = { ...exam };
+        excludedProperties.forEach(prop => delete filteredExam[prop]);
+        return filteredExam;
+    })
 
     const [selectedExamId, setSelectedExamId] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showGradeModal, setShowGradeModal] = useState(false);
     const [updateSuccess, setUpdateSuccess] = useState(false); 
+    const [deleteSuccess, setDeleteSuccess] = useState(false); 
 
     const handleUpdateSuccess = () => {
         setUpdateSuccess(true);
         handleCloseModal();
     };
 
+    const handleDeleteSuccess = () => {
+        setDeleteSuccess(true);
+        handleCloseModal();
+    };
+
     useEffect(() => {
-        if (updateSuccess) {
+        if (updateSuccess || deleteSuccess) {
           refetch(); 
           setUpdateSuccess(false);
+          setDeleteSuccess(false);
         }
-      }, [updateSuccess, refetch]);    
+      }, [updateSuccess, deleteSuccess]);    
 
     const handleEdit = (examId) => {
         setSelectedExamId(examId);
@@ -68,7 +80,7 @@ const GetAllExams = () => {
                         <SearchBar filterText={filterText} setFilterText={setFilterText} />
                         <div style={{ overflowX: 'auto' }}>
                             <DataTable
-                                data={filteredData}
+                                data={filteredDataWithoutExcludedProperties}
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                                 onGetGradeAvg={handleGetGradeAvg}
@@ -92,7 +104,7 @@ const GetAllExams = () => {
                                 <Modal.Title>Delete Exam</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                {!!selectedExamId && <RemoveExam examId={selectedExamId} />}
+                                {!!selectedExamId && <RemoveExam examId={selectedExamId} onDeleteSuccess={handleDeleteSuccess}/>}
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseModal}>

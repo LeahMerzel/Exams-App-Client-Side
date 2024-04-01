@@ -3,13 +3,13 @@ import { useUser } from '../auth/UserContext';
 import DataTable from '../filterableTable/DataTable';
 import SearchBar from '../filterableTable/SearchBar';
 import { fetchCourseUsers } from '../api/CourseUsersApi';
-import useFilterableTable from '../hooks/useFilterableTable';
-import { Card } from 'react-bootstrap';
+import { Card, Spinner, Alert } from 'react-bootstrap';
 
-const FetchCourseUsers = () => {
+const GetCourseUsers = () => {
   const { userCourse } = useUser();
   const [courseUsers, setCourseUsers] = useState(null);
-  const { filterText, setFilterText, filteredData } = useFilterableTable(courseUsers || []);
+  const [filteredUsers, setFilteredUsers] = useState(null);
+  const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
     const getCourseUsers = async () => {
@@ -26,14 +26,38 @@ const FetchCourseUsers = () => {
     }
   }, [userCourse]);
 
+  useEffect(() => {
+    if (!courseUsers) return;
+
+    // Filter out users with the role "Teacher" and exclude specific properties
+    const filtered = courseUsers.map(user => {
+      if (user.userRole === 'Teacher') return null; // Exclude teachers
+      const { teachersExams, studentsTakenExams, studentGradeAvg, Actions, ...filteredUser } = user;
+      return filteredUser;
+    }).filter(Boolean); // Filter out null values (teachers)
+    setFilteredUsers(filtered);
+  }, [courseUsers]);
+
+  const handleFilterChange = (text) => {
+    setFilterText(text);
+  };
+
+  const filteredData = filteredUsers?.filter(user =>
+    Object.values(user).some(value =>
+      typeof value === 'string' && value.toLowerCase().includes(filterText.toLowerCase())
+    )
+  );
+
   return (
     <Card>
       <Card.Body>
-        {courseUsers && (
+        {courseUsers === null && <Spinner animation="border" />}
+        {courseUsers !== null && courseUsers.length === 0 && <Alert variant="info">No users found.</Alert>}
+        {courseUsers !== null && courseUsers.length > 0 && (
           <div>
-            <SearchBar filterText={filterText} setFilterText={setFilterText} />
+            <SearchBar filterText={filterText} setFilterText={handleFilterChange} />
             <div style={{ overflowX: 'auto' }}>
-              <DataTable data={filteredData} entityName={"users"}/>
+              <DataTable data={filteredData} entityName="users" />
             </div>
           </div>
         )}
@@ -42,4 +66,4 @@ const FetchCourseUsers = () => {
   );
 };
 
-export default FetchCourseUsers;
+export default GetCourseUsers;

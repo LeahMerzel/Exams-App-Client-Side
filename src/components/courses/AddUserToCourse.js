@@ -10,11 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const AddUserToCourse = () => { 
   const { userCourse, setCourse, user } = useUser();
   const getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
-  const {
-    data: courses,
-    isLoading: coursesLoading,
-    error: fetchError,
-  } = useFetch(getAllCoursesApiUrl);
+  const { data: courses, isLoading: coursesLoading, error: fetchError } = useFetch(getAllCoursesApiUrl);
 
   const [selectedCourse, setSelectedCourse] = useState("");
   const [addedCourseName, setAddedCourseName] = useState("");
@@ -61,6 +57,7 @@ const AddUserToCourse = () => {
 
   const handleRemoveConfirmation = () => {
     setShowRemoveUser(false); 
+    setCourse("");
   };
 
   return (

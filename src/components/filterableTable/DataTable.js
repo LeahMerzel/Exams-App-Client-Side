@@ -84,7 +84,8 @@ function DataTable({ data, onEdit, onDelete, onTakeExam, onGetQuestionFailed, on
             {Object.keys(data[0]).map((key, index) => (
               <th key={index}>{key}</th>
             ))}
-            <th>Actions</th>
+            {/* Adjusted condition for rendering the Actions column */}
+            {userRole !== "Teacher" && entityName !== "users" && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>{rows}</tbody>

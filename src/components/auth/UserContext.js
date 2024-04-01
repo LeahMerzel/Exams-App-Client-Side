@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { authenticateUser, registerUser} from '../api/AuthApi';
 import { fetchCourseById } from '../api/CourseUsersApi';
 
+
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -41,11 +42,11 @@ export const UserProvider = ({ children }) => {
   const login = async (loginCredentials) => {
     try {
       const response = await authenticateUser(loginCredentials);
-      const { userRole } = response;
+      const { id, userRole } = response; 
       setUserRole(userRole);
       setUserLoggedIn(true);
-      setUser(response);
-      localStorage.setItem('user', JSON.stringify(response));
+      setUser({ id, userRole }); 
+      localStorage.setItem('user', JSON.stringify({ id, userRole })); 
       setUserCourseAfterLogin(response.courseId);
       toast.success('Login successful!');
       return response;
@@ -53,7 +54,27 @@ export const UserProvider = ({ children }) => {
       toast.error('Login failed. Please try again.');
     }
   };
-  
+    
+  useEffect(() => {
+    if (userRole) {
+      switch (userRole) {
+        case "Admin":
+          navigate("/admin-dashboard");
+          break;
+        case "Teacher":
+          navigate("/teacher-dashboard");
+          break;
+        case "Student":
+          navigate("/student-dashboard");
+          break;
+        default:
+          navigate('/');
+          break;
+      }
+    }
+    }, [userRole]);
+
+
   const register = async (userData) => {
     try {
       const response = await registerUser(userData);
