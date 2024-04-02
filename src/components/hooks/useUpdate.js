@@ -14,12 +14,12 @@ const useUpdate = (apiUrl) => {
     try {
       const response = await updateEntityAPI(apiUrl, entityToUpdate);
       setIsLoading(false);
-      toast.success('Entity updated successfully!');
+      toast.success('Updated successfully!');
       return response; 
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
-      toast.error('Failed to update entity. Please try again.');
+      toast.error('Failed to update. Please try again.');
     }
   };
 

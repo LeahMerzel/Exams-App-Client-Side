@@ -14,11 +14,11 @@ const useDelete = (apiUrl) => {
     try {
       await deleteEntityAPI(apiUrl, entityId);
       setIsLoading(false);
-      toast.success('Entity deleted successfully!');
+      toast.success('Deleted successfully!');
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
-      toast.error('Failed to delete entity. Please try again.');
+      toast.error('Failed to delete. Please try again.');
     }
   };
 

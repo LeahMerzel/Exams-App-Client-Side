@@ -8,8 +8,10 @@ import UpdateExam from './UpdateExam';
 import RemoveExam from "./RemoveExam";
 import { useUser } from "../auth/UserContext";
 import GetExamGradesAvg from "./GetExamGradesAvg";
+import { useNavigate } from "react-router-dom";
 
 const GetAllExams = () => {
+    const navigate = useNavigate();
     const { user } = useUser();
     const getAllExamsApiUrl = `https://localhost:7252/api/User/${user.id}/teacher-exams`;
 
@@ -24,16 +26,9 @@ const GetAllExams = () => {
     })
 
     const [selectedExamId, setSelectedExamId] = useState(null);
-    const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showGradeModal, setShowGradeModal] = useState(false);
-    const [updateSuccess, setUpdateSuccess] = useState(false); 
     const [deleteSuccess, setDeleteSuccess] = useState(false); 
-
-    const handleUpdateSuccess = () => {
-        setUpdateSuccess(true);
-        handleCloseModal();
-    };
 
     const handleDeleteSuccess = () => {
         setDeleteSuccess(true);
@@ -41,16 +36,15 @@ const GetAllExams = () => {
     };
 
     useEffect(() => {
-        if (updateSuccess || deleteSuccess) {
+        if (deleteSuccess) {
           refetch(); 
-          setUpdateSuccess(false);
           setDeleteSuccess(false);
         }
-      }, [updateSuccess, deleteSuccess]);    
+      }, [deleteSuccess]);    
 
     const handleEdit = (examId) => {
         setSelectedExamId(examId);
-        setShowEditModal(true);
+        navigate(`/edit-exam/${examId}`);
     };
 
     const handleDelete = (examId) => {
@@ -60,7 +54,6 @@ const GetAllExams = () => {
 
     const handleCloseModal = () => {
         setSelectedExamId(null);
-        setShowEditModal(false);
         setShowDeleteModal(false);
         setShowGradeModal(false);
     };
@@ -86,19 +79,8 @@ const GetAllExams = () => {
                                 onGetGradeAvg={handleGetGradeAvg}
                             />
                         </div>
-                        <Modal show={showEditModal} onHide={handleCloseModal}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Edit Exam</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                {!!selectedExamId && <UpdateExam examId={selectedExamId} onUpdateSuccess={handleUpdateSuccess} />}
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCloseModal}>
-                                    Close
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
+                        <Button onClick={handleEdit}>Edit Exam</Button>
+                        {!!selectedExamId && <UpdateExam examId={selectedExamId} />}
                         <Modal show={showDeleteModal} onHide={handleCloseModal}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Delete Exam</Modal.Title>

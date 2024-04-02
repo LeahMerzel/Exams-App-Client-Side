@@ -4,7 +4,7 @@ import Form from "../../forms/Form";
 import { Spinner, Alert } from "react-bootstrap";
 import GetQuestionAnswers from '../answers/GetQuestionAnswers';
 
-const UpdateQuestion = (questionId) => {
+const UpdateQuestion = ({questionId}) => {
     const updateQuestionApiUrl = "https://localhost:7252/api/Question/update";
     const { updateEntity, isLoading, error } = useUpdate(updateQuestionApiUrl);
     const [ answersOrderRandom, setAnswersOrderRandom] = useState(false); 

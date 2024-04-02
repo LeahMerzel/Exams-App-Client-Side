@@ -53,12 +53,6 @@ const TeacherDashboard = () => {
                       <GetUserCourse />
                     </Col>
                   </Row>
-                  <Row>
-                    <Col xs={12} md={12} lg={12} className="mb-5">
-                      <h4>My Students:</h4>
-                      <GetCourseUsers />
-                    </Col>
-                  </Row>
             </>
           )}
           </Row>

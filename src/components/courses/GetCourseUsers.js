@@ -32,7 +32,7 @@ const GetCourseUsers = () => {
     // Filter out users with the role "Teacher" and exclude specific properties
     const filtered = courseUsers.map(user => {
       if (user.userRole === 'Teacher') return null; // Exclude teachers
-      const { teachersExams, studentsTakenExams, studentGradeAvg, Actions, ...filteredUser } = user;
+      const { teachersExams, userName, passwordHash, ...filteredUser } = user;
       return filteredUser;
     }).filter(Boolean); // Filter out null values (teachers)
     setFilteredUsers(filtered);

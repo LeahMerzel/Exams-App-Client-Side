@@ -41,10 +41,14 @@ const UpdateCourse = ({ courseId, onUpdateSuccess, onHideModal }) => {
 
   if (!course) return null;
 
+  const excludedProperties = ['id', 'createdAt'];
+
   return (
     <div>
       <Form onSubmit={onSubmit}>
-        {Object.entries(formData).map(([key, value]) => (
+        {Object.entries(formData)
+        .filter(([key]) => !excludedProperties.includes(key))
+        .map(([key, value]) => (
           <Form.Group key={key}>
             <Form.Label>{key}</Form.Label>
             <Form.Control

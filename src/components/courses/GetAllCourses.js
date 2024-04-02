@@ -13,6 +13,14 @@ const GetAllCourses = () => {
     const getAllCoursesApiUrl = "https://localhost:7252/api/Course/get-all";
     const { data: courses, isLoading, error, refetch } = useFetch(getAllCoursesApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(courses || []);
+
+    const excludedProperties = ['exams'];
+    const filteredDataWithoutExcludedProperties = filteredData.map(course => {
+        const filteredCourse = { ...course };
+        excludedProperties.forEach(prop => delete filteredCourse[prop]);
+        return filteredCourse;
+    })
+
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -52,7 +60,7 @@ const GetAllCourses = () => {
                     <div>
                         <SearchBar filterText={filterText} setFilterText={setFilterText} />
                         <div style={{ overflowX: 'auto' }}>
-                            <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
+                            <DataTable data={filteredDataWithoutExcludedProperties} onEdit={handleEdit} onDelete={handleDelete} />
                         </div>
                         <Modal show={showEditModal} onHide={handleCloseModal}>
                             <Modal.Header closeButton>

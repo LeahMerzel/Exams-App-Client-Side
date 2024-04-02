@@ -23,6 +23,7 @@ import GetStarted from './components/auth/GetStarted';
 import CreateNewExam from './components/exams/CreateNewExam';
 import CreateNewUser from './components/users/CreateNewUser';
 import CreateNewCourse from './components/courses/CreateNewCourse';
+import UpdateExam from './components/exams/UpdateExam';
 
 const App = () => {
   
@@ -51,6 +52,7 @@ const App = () => {
                   <Route path="/take-exam" element={<TakeExam />} />
                   <Route path="/create-new-user" element={<CreateNewUser />} />
                   <Route path="/create-new-exam" element={<CreateNewExam />} />
+                  <Route path="/edit-exam/:examId" element={<UpdateExam />} />
                   <Route path="/create-new-course" element={<CreateNewCourse />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>

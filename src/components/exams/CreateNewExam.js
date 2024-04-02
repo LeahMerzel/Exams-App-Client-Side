@@ -14,7 +14,7 @@ const CreateNewExam = () => {
   const createExamApiUrl = "https://localhost:7252/api/Exam/create";
   const { createEntity, isLoading, error } = useCreate(createExamApiUrl);
   const [showForm, setShowForm] = useState(true); 
-  const [questionsOrderRandom, setQuestionsOrderRandom] = useState(true);
+  const [questionsOrderRandom, setQuestionsOrderRandom] = useState(false);
   const [examId, setExamId] = useState(null);
   const [showCreateQuestion, setShowCreateQuestion] = useState(false); 
   const [examSubmitted, setExamSubmitted] = useState(false);
@@ -22,6 +22,7 @@ const CreateNewExam = () => {
   const navigate = useNavigate();
 
   const fields = [
+    { name: "teacherName", label: "Teacher Name", type: "text", required: true },
     { name: "examName", label: "Exam Name", type: "text", required: true },
     { name: "examDescription", label: "Exam Description", type: "text" },
     { name: "startExamDateTime", label: "Exam Date and Time", type: "datetime-local", required: true },
@@ -53,11 +54,10 @@ const CreateNewExam = () => {
     }
 
     formData.teacherId = user.id;
-    formData.teacherName = user.fullName;
     if (userCourse){
       formData.courseId = userCourse.id;
     }
-    formData.questionsOrderRandom = questionsOrderRandom;
+    formData.isOrderQuestionsRandom = questionsOrderRandom;
     const response = await createEntity(formData);
     setExamId(response.id);
     setExamSubmitted(true); 

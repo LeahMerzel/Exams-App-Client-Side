@@ -7,22 +7,29 @@ import useUpdate from "../hooks/useUpdate";
 import {useUser} from '../auth/UserContext';
 
 const UpdateUser = ({ userId, onFormClose }) => {
-  const {user} = useUser()
+  const {user, userRole} = useUser()
   let userid = userId? userId : user.id;
   const getUserApiUrl = `https://localhost:7252/api/User/get-by-id/${userid}`;
   const { data: userToUpdate } = useFetch(getUserApiUrl);
+  console.log(userToUpdate)
   const updateUserApiUrl = `https://localhost:7252/api/Auth/update`;
   const { updateEntity, isLoading, error } = useUpdate(updateUserApiUrl);
   const [formData, setFormData] = useState({});
   const [showForm, setShowForm] = useState(true);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal] = useState(true);
 
   useEffect(() => {
     if (userToUpdate) {
-      const { id, createdAt, userRole, courseId, teachersExams, studentsTakenExams, studentGradeAvg, ...formDataWithoutExcluded } = userToUpdate;
-      setFormData(formDataWithoutExcluded);
+      if (userRole !== "Admin")
+      {
+        let { id, createdAt, userRole, courseId, teachersExams, studentsTakenExams, studentGradeAvg, ...formDataWithoutExcluded } = userToUpdate;
+        setFormData(formDataWithoutExcluded);
+      } else if (userRole === "Admin") {
+        let { id, createdAt, courseId, teachersExams, studentsTakenExams, studentGradeAvg, ...formDataWithoutExcluded } = userToUpdate;
+        setFormData(formDataWithoutExcluded);
+      }
     }
-  }, [userToUpdate]);
+  }, [userToUpdate, userRole]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +39,7 @@ const UpdateUser = ({ userId, onFormClose }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
+      formData.id = userToUpdate.id;
       const response = await updateEntity(formData);
       if (response) {
         toast.success('Update successful!');
@@ -46,7 +54,7 @@ const UpdateUser = ({ userId, onFormClose }) => {
 
   const handleModalClose = () => {
     setFormData({});
-    setShowModal(false);
+    onFormClose();
   };
 
   return (
@@ -58,7 +66,7 @@ const UpdateUser = ({ userId, onFormClose }) => {
           {userToUpdate && (
             <Modal show={showModal} onHide={handleModalClose}>
               <Modal.Header closeButton>
-                <Modal.Title>Exam Confirmation</Modal.Title>
+                <Modal.Title>Update User</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form className="mt-3" onSubmit={onSubmit}>

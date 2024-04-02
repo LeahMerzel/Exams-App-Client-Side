@@ -12,7 +12,7 @@ const CreateNewQuestion = ({ examId }) => {
     const [ answersOrderRandom, setAnswersOrderRandom] = useState(false); 
     const [ questionId, setQuestionId] = useState();
     const [ showCreateAnswer, setShowCreateAnswer] = useState(false); 
-    const [ validationErrors, setValidationErrors ] = useState({}); // State for validation errors
+    const [ validationErrors, setValidationErrors ] = useState({}); 
 
     const fields = [
         { name: "questionNumber", label: "Question Number", type: "number", required: true },

@@ -14,7 +14,7 @@ const CreateNewUser = () => {
         { name: 'FullName', label: 'Full Name', type: 'text' },
         { name: 'Email', label: 'Email Address', type: 'email' },
         { name: 'PasswordHash', label: 'Password', type: 'password', regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/ },
-        { name: 'UserRole', label: 'User Role', type: 'select', options: ['Admin', 'Teacher', 'Student'] }
+        { name: 'UserRole', label: 'User Role', type: 'select', options: ['Please select a user role', 'Teacher', 'Student'] }
         ];
 
     const handleSubmit = async (formData) => {

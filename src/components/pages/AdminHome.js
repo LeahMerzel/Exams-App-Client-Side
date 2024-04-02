@@ -6,7 +6,7 @@ const AdminHome = () => {
   return (
     <div>
       <h1>Admin Home</h1>
-      <GetStarted />
+      <GetStarted isAdmin={true}/>
     </div>
   );
 };

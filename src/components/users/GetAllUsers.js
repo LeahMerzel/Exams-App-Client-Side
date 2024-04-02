@@ -1,5 +1,3 @@
-// GetAllUsers.js
-
 import React, { useState } from "react";
 import useFetch from "../hooks/useFetch";
 import { Spinner, Alert, Card, Modal, Button } from "react-bootstrap";
@@ -13,6 +11,14 @@ const GetAllUsers = () => {
     const getAllUsersApiUrl = "https://localhost:7252/api/User/get-all";
     const { data: users, isLoading, error, refetch } = useFetch(getAllUsersApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(users || []);
+
+    const excludedProperties = ['teachersExams','studentsTakenExams', 'studentGradeAvg'];
+    const filteredDataWithoutExcludedProperties = filteredData.map(user => {
+        const filteredUser = { ...user };
+        excludedProperties.forEach(prop => delete filteredUser[prop]);
+        return filteredUser;
+    })
+
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -39,6 +45,7 @@ const GetAllUsers = () => {
     };
 
     const handleFormClose = () => {
+        refetch();
         setShowEditModal(false); 
     };
   
@@ -51,9 +58,9 @@ const GetAllUsers = () => {
                     <div>
                         <SearchBar filterText={filterText} setFilterText={setFilterText} />
                         <div style={{ overflowX: 'auto' }}>
-                            <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
+                            <DataTable data={filteredDataWithoutExcludedProperties} onEdit={handleEdit} onDelete={handleDelete} />
                         </div>
-                        <Modal show={showEditModal} onHide={handleCloseModal}>
+                        <Modal show={showEditModal && !!selectedUserId} onHide={handleCloseModal}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Edit User</Modal.Title>
                             </Modal.Header>
