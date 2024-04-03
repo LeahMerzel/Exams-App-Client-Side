@@ -79,8 +79,6 @@ const GetAllExams = () => {
                                 onGetGradeAvg={handleGetGradeAvg}
                             />
                         </div>
-                        <Button onClick={handleEdit}>Edit Exam</Button>
-                        {!!selectedExamId && <UpdateExam examId={selectedExamId} />}
                         <Modal show={showDeleteModal} onHide={handleCloseModal}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Delete Exam</Modal.Title>

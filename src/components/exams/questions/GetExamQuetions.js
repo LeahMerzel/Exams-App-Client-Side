@@ -1,112 +1,88 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
-import useFilterableTable from "../../hooks/useFilterableTable";
-import DataTable from "../../filterableTable/DataTable";
-import SearchBar from "../../filterableTable/SearchBar";
 import UpdateQuestion from './UpdateQuestion';
-import { Spinner, Alert, Button } from "react-bootstrap";
+import { Spinner, Alert, Button, Form } from "react-bootstrap";
 import RemoveQuestion from "./RemoveQuestion";
-import { useUser } from "../../auth/UserContext";
 import GetQuestionAnswers from "../answers/GetQuestionAnswers";
-import { useNavigate } from "react-router-dom";
+import CreateNewAnswer from "../answers/CreateNewAnswer";
 
-const GetExamQuestions = ({ onFinishExam }) => {
-  const { userRole, studentExamId } = useUser();
-  console.log("in questions")
-  const navigate = useNavigate();
-  const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${studentExamId}/questions`;
-  const { data: questions, isLoading, error } = useFetch(getExamQuestionsApiUrl);
-  const { filterText, setFilterText, filteredData } = useFilterableTable(questions || []);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [grade, setGrade] = useState(null);
-  const [failedList, setFailedList] = useState([]);
+const GetExamQuestions = ({ examId, onCloseForm }) => {
+  const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${examId}/questions`;
+  const { data: questions, isLoading, error, refetch } = useFetch(getExamQuestionsApiUrl);
 
-  useEffect(() => {
-    calculateGrade();
-  }, [selectedAnswers]);
+  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+  const [deleteQuestion, setDeleteQuestion] = useState(null);
+  const [viewAnswers, setViewAnswers] = useState(null);
+  const [addAnswer, setAddAnswer] = useState(null);
+  const [showForm, setShowForm] = useState(true);
 
-  const handleEdit = (item) => {
-    return <UpdateQuestion questionId={item} />;
+  const handleEdit = (questionId) => {
+    setSelectedQuestionId(questionId);
   };
 
-  const handleDelete = (item) => {
-    return <RemoveQuestion questionId={item} />;
+  const handleDelete = (questionId) => {
+    setDeleteQuestion(questionId);
   };
 
-  const handleNextQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+  const handleViewAnswers = (questionId) => {
+    setViewAnswers(questionId);
   };
 
-  const handlePreviousQuestion = () => {
-    setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
+  const handleDeleteSuccess = () => {
+    setDeleteQuestion(null);
+    setShowForm(false);
+    refetch();
   };
 
-  const handleAnswerSelection = (questionId, isCorrect) => {
-    setSelectedAnswers({ ...selectedAnswers, [questionId]: isCorrect });
+  const handleAddAnswer = (questionId) => {
+    setAddAnswer(questionId);
   };
 
-  const calculateGrade = () => {
-    if (!questions || !selectedAnswers) return;
-
-    let totalScore = 0;
-    let obtainedScore = 0;
-    let failed = [];
-
-    questions.forEach((question) => {
-      const selectedAnswerId = selectedAnswers[question.id];
-      if (selectedAnswerId !== undefined) {
-        const selectedAnswer = question.answers.find(
-          (answer) => answer.id === selectedAnswerId
-        );
-        if (selectedAnswer && selectedAnswer.isCorrect) {
-          obtainedScore += question.questionScore;
-        } else {
-          failed.push(question);
-        }
-        totalScore += question.questionScore;
-      }
-    });
-
-    setFailedList(failed);
-
-    const gradePercentage = (obtainedScore / totalScore) * 100;
-    setGrade(gradePercentage.toFixed(2));
+  const handleAddSuccess = () => {
+    setAddAnswer(null);
+    refetch();
   };
 
-  const handleSubmitExam = () => {
-    onFinishExam(grade, failedList);
-    navigate("/take-exam");
-  };
+  const handleCancel = () => {
+    setShowForm(false);
+    onCloseForm();
+  }
 
   return (
-    <div>
+    <div className="mt-3">
       {isLoading && <Spinner animation="border" />}
       {error && <Alert variant="danger">Error: {error}</Alert>}
-      {questions && userRole !== "Student" && (
+      {questions && showForm &&(
         <div>
-          <SearchBar filterText={filterText} setFilterText={setFilterText} />
-          <DataTable data={filteredData} onEdit={handleEdit} onDelete={handleDelete} />
-        </div>
-      )}
-      {questions && questions.length > 0 && (
-        <div>
-          <h3>{questions[currentQuestionIndex].name}</h3>
-          <p>{questions[currentQuestionIndex].description}</p>
-          <GetQuestionAnswers
-            questionId={questions[currentQuestionIndex].id}
-            onSelectAnswer={(isCorrect) =>
-              handleAnswerSelection(questions[currentQuestionIndex].id, isCorrect)
-            }
-            selectedAnswers={selectedAnswers}
-          />
-          <Button onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0}>
-            Previous
-          </Button>
-          <Button onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1}>
-            Next
-          </Button>
-          <Button onClick={handleSubmitExam}>Ready to Submit Exam</Button>
+          {questions.map((question) => (
+            <div className="mt-2" key={question.id}>
+              <Form>
+                <Form.Group controlId={`question_${question.id}`}>
+                <Form.Label>Question Number:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={question.questionNumber}
+                    readOnly
+                  />
+                  <Form.Label>Question Description:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={question.questionDescription}
+                    readOnly
+                  />
+                </Form.Group>
+              </Form>
+              <Button className="m-2 mt-3" variant="primary" onClick={() => handleEdit(question.id)}>Edit</Button>
+              <Button className="m-2 mt-3" variant="primary" onClick={() => handleViewAnswers(question.id)}>View Answers</Button>
+              <Button className="m-2 mt-3" variant="primary" onClick={() => handleAddAnswer(question.id)}>Add Answer</Button>
+              <Button className="m-2 mt-3" variant="danger" onClick={() => handleDelete(question.id)}>Delete</Button>
+              {selectedQuestionId === question.id && <UpdateQuestion questionId={question.id} />}
+              {deleteQuestion === question.id && <RemoveQuestion questionId={question.id} onDeleteSuccess={handleDeleteSuccess}/>}
+              {viewAnswers === question.id && <GetQuestionAnswers questionId={question.id} />}
+              {addAnswer === question.id && <CreateNewAnswer questionId={question.id} onAddSuccess={handleAddSuccess}/>}
+            </div>
+          ))}
+          <Button className="mt-3" variant="secondary" onClick={handleCancel}>Close Exam's Questions</Button>
         </div>
       )}
     </div>

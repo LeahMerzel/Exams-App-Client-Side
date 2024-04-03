@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Button, Form as BootstrapForm, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom"; 
 import FormField from "./FormField";
+import UploadImageForm from "../image handling/UploadImageForm";
 
-const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl }) => {
+const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl, onRenderImage }) => {
   const [formData, setFormData] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
+  const [addImage, setAddImage] = useState(false);
   const navigate = useNavigate(); 
 
   const handleChange = (fieldName) => (value) => {
@@ -64,11 +66,19 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl }) =
     }
   }, [entityName, newPageUrl]);
 
+  const handleAddImage = () => {
+    setAddImage(true);
+  }
+
+  const handleUploadImage = (file) => {
+    onRenderImage(file);
+  };
+
   return (
     <>
       <Container className="mt-3 p-3">
         <BootstrapForm onSubmit={handleSubmit}>
-          <h3 className="pb-3">{entityName}</h3>
+          {entityName !== "this Answer" && <h3 className="pb-3">{entityName}</h3>}
           {fields.map((field) => (
             <div key={field.name} className="mb-4">
             <FormField
@@ -89,10 +99,16 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl }) =
               : "Submit"}{" "}
             {entityName}
           </Button>
-          {entityName !== "Login" && entityName !== "Register" && (
+          {entityName !== "Login" && entityName !== "Register" && entityName !=="this Answer" &&(
             <Button onClick={handleCancel}>
               Cancel
             </Button>
+          )}
+          {onRenderImage && (
+            <>
+            <Button onClick={handleAddImage}>Add Image</Button>
+            {addImage && <UploadImageForm onUpload={handleUploadImage} />}
+            </>
           )}
         </BootstrapForm>
         {typeof onRender === "function" && onRender()}
