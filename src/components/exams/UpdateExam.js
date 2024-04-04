@@ -27,9 +27,14 @@ const UpdateExam = () => {
   }, [entireExam]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     const [fieldName, fieldIndex, subFieldName] = name.split('.');
-    if (fieldIndex !== undefined && subFieldName !== undefined) {
+    if (type === 'checkbox') {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: checked 
+      }));
+    } else if (fieldIndex !== undefined && subFieldName !== undefined) {
       const updatedData = { ...formData };
       updatedData[fieldName][fieldIndex][subFieldName] = value;
       setFormData(updatedData);
@@ -87,14 +92,24 @@ const UpdateExam = () => {
                   .filter(([key]) => !excludedProperties.includes(key))
                   .map(([key, value]) => (
                     <Form.Group key={key}>
-                    <Form.Label>{key}</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name={key}
-                      value={value}
-                      onChange={handleInputChange}
-                    />
-                    </Form.Group>
+                            <Form.Label>{key}</Form.Label>
+                            {key === 'isOrderQuestionsRandom' ? (
+                            <Form.Check
+                                type="checkbox"
+                                label={key === "Randomize Questions Order" }
+                                name={key}
+                                checked={!!value} // Ensure value is a boolean
+                                onChange={handleInputChange}
+                            />
+                            ) : (
+                            <Form.Control
+                                type="text"
+                                name={key}
+                                value={value}
+                                onChange={handleInputChange}
+                            />
+                            )}
+                        </Form.Group>
                   ))}
                   <Button className="mt-3" type="submit">Update Exam</Button>
                 </Form>

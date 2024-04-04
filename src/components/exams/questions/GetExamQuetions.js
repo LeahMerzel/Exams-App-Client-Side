@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import useFetch from "../../hooks/useFetch";
 import UpdateQuestion from './UpdateQuestion';
 import { Spinner, Alert, Button, Form } from "react-bootstrap";
 import RemoveQuestion from "./RemoveQuestion";
 import GetQuestionAnswers from "../answers/GetQuestionAnswers";
 import CreateNewAnswer from "../answers/CreateNewAnswer";
+import DisplayImage from '../../image handling/DisplayImage'; 
 
 const GetExamQuestions = ({ examId, onCloseForm }) => {
   const getExamQuestionsApiUrl = `https://localhost:7252/api/Exam/${examId}/questions`;
   const { data: questions, isLoading, error, refetch } = useFetch(getExamQuestionsApiUrl);
+  console.log(questions)
 
   const [selectedQuestionId, setSelectedQuestionId] = useState(null);
   const [deleteQuestion, setDeleteQuestion] = useState(null);
@@ -58,7 +60,7 @@ const GetExamQuestions = ({ examId, onCloseForm }) => {
             <div className="mt-2" key={question.id}>
               <Form>
                 <Form.Group controlId={`question_${question.id}`}>
-                <Form.Label>Question Number:</Form.Label>
+                  <Form.Label>Question Number:</Form.Label>
                   <Form.Control
                     type="text"
                     value={question.questionNumber}
@@ -70,6 +72,7 @@ const GetExamQuestions = ({ examId, onCloseForm }) => {
                     value={question.questionDescription}
                     readOnly
                   />
+                  {question.imageUrl && <DisplayImage imageUrl={question.imageUrl} />} {/* Display the image if it exists */}
                 </Form.Group>
               </Form>
               <Button className="m-2 mt-3" variant="primary" onClick={() => handleEdit(question.id)}>Edit</Button>

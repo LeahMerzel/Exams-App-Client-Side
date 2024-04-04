@@ -1,9 +1,10 @@
-// UpdateCourse.js
-
 import React, { useState, useEffect } from "react";
 import { Spinner, Alert, Button, Form } from "react-bootstrap";
 import useUpdate from "../hooks/useUpdate";
 import useFetch from "../hooks/useFetch";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const UpdateCourse = ({ courseId, onUpdateSuccess, onHideModal }) => {
   const getCourseApiUrl = `https://localhost:7252/api/Course/get-by-id/${courseId}/`;
@@ -28,6 +29,10 @@ const UpdateCourse = ({ courseId, onUpdateSuccess, onHideModal }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (!formData.courseName || !formData.courseStartingDate) {
+        toast.error('Field is required.');
+        return;
+      }
       await updateEntity(formData);
       onUpdateSuccess(); 
       onHideModal();

@@ -51,7 +51,6 @@ const StartExam = ({ questionId, questionNumber, questionDescription, questionSc
       alert("Please select an answer for each question before submitting the exam.");
       return;
     }
-    console.log(failedQuestions);
     onEndExam(failedQuestions);
     setExamEnded(true);
     

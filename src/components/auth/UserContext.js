@@ -43,7 +43,9 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await authenticateUser(loginCredentials);
       const { id, userRole } = response; 
-      setUserRole(userRole);
+      if (userRole){
+        setUserRole(userRole);
+      }
       setUserLoggedIn(true);
       setUser({ id, userRole }); 
       localStorage.setItem('user', JSON.stringify({ id, userRole })); 

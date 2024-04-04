@@ -61,7 +61,7 @@ const UpdateQuestion = ({questionId}) => {
       
       if (!questionToUpdate) return null;
     
-      const excludedProperties = ['id', 'createdAt', 'examId', 'answers', 'correctAnswerDescription'];
+      const excludedProperties = ['id', 'createdAt', 'examId', 'answers', 'correctAnswerDescription', 'imageData', 'contentType', 'imageUrl'];
 
     return (
         <div>

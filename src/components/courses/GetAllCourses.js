@@ -69,6 +69,11 @@ const GetAllCourses = () => {
                             <Modal.Body>
                                 {!!selectedCourseId && <UpdateCourse courseId={selectedCourseId} onUpdateSuccess={handleCourseUpdated} onHideModal={handleCloseModal} />}
                             </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseModal}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
                         </Modal>
                         <Modal show={showDeleteModal} onHide={handleCloseModal}>
                             <Modal.Header closeButton>

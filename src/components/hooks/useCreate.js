@@ -9,7 +9,7 @@ const useCreate = (apiUrl) => {
 
   const createEntity = async (requestBody) => {
     setIsLoading(true);
-
+console.log(requestBody)
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',

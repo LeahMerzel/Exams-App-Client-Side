@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import FormField from "./FormField";
 import UploadImageForm from "../image handling/UploadImageForm";
 
-const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl, onRenderImage }) => {
+const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl }) => {
   const [formData, setFormData] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
   const [addImage, setAddImage] = useState(false);
@@ -66,14 +66,6 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl, onR
     }
   }, [entityName, newPageUrl]);
 
-  const handleAddImage = () => {
-    setAddImage(true);
-  }
-
-  const handleUploadImage = (file) => {
-    onRenderImage(file);
-  };
-
   return (
     <>
       <Container className="mt-3 p-3">
@@ -103,12 +95,6 @@ const FormComponent = ({ fields, onSubmit, entityName, onRender, newPageUrl, onR
             <Button onClick={handleCancel}>
               Cancel
             </Button>
-          )}
-          {onRenderImage && (
-            <>
-            <Button onClick={handleAddImage}>Add Image</Button>
-            {addImage && <UploadImageForm onUpload={handleUploadImage} />}
-            </>
           )}
         </BootstrapForm>
         {typeof onRender === "function" && onRender()}

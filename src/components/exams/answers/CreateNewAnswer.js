@@ -20,13 +20,13 @@ const CreateNewAnswer = ({ questionId, onAddSuccess }) => {
 
   const onSubmit = async (formData) => {
     formData.questionId = questionId;
+
     if (!formData.questionId) return;
 
     const isValid = validateFormData(formData);
     if (!isValid) {
       return;
     }
-
     const response = await createEntity(formData);
     if (response) {
       toast.success("Answer created");

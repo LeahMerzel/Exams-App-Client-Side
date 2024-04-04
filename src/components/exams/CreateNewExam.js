@@ -83,12 +83,12 @@ const CreateNewExam = () => {
     navigate("/teacher-dashboard");
   };
 
-  const handleSaveExamLocally = () => {
-    const getExamApiUrl = `https://localhost:7252/api/Exam/get-by-id/${examId}`;
-    console.log(getExamApiUrl)
-    const exam = fetchEntityAPI(getExamApiUrl);
-    if (!exam || !examId) return;
+  const handleSaveExamLocally = async () => {
+    const getExamApiUrl = `https://localhost:7252/api/Exam/${examId}/exam-questions-answers`;
     try {
+      const exam = await fetchEntityAPI(getExamApiUrl);
+      if (!exam || !examId) return;
+  
       const jsonExam = JSON.stringify(exam);
       const blob = new Blob([jsonExam], { type: "application/json" });
       const url = window.URL.createObjectURL(blob);
@@ -104,7 +104,7 @@ const CreateNewExam = () => {
       toast.error('Error saving exam locally. Please try again.');
     }
   };
-
+  
   return (
     <Card>
       <Card.Body>

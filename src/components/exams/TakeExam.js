@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Spinner, Alert, Button, Card } from "react-bootstrap";
+import { Spinner, Alert, Button, Card, Form as BootstrapForm } from "react-bootstrap";
 import useFetch from "../hooks/useFetch";
 import StartExam from '../exams/questions/StartExam';
 import Timer from './Timer';
@@ -27,10 +27,19 @@ const TakeExam = () => {
   const [calculatingGrade, setCalculatingGrade] = useState(false);
   const [displayGrade, setDisplayGrade] = useState(false);
   const [examSubmitted, setExamSubmitted] = useState(false); 
+  const [fullName, setFullName] = useState('');
+  const [fullNameSubmitted, setFullNameSubmitted] = useState(false);
 
   const handleStartExam = () => {
     setStartExam(true);
     setExamStarted(true);
+  };
+
+  const handleFullNameSubmit = (e) => {
+    e.preventDefault();
+    if (fullName.trim() !== '') {
+      setFullNameSubmitted(true);
+    }
   };
 
   const handleNextQuestion = () => {
@@ -43,7 +52,7 @@ const TakeExam = () => {
 
   const handleSubmitExam = async () => {
     const studentExamData = {
-      studentName: user.fullName,
+      studentName: fullName, // Use the full name entered by the user
       studentId: user.id,
       examId: studentExam.id,
       grade: grade,
@@ -85,9 +94,29 @@ const TakeExam = () => {
 
   return (
     <div>
+      {!fullNameSubmitted && (
+        <Card>
+          <Card.Body>
+            <Card.Title>Enter Your Full Name</Card.Title>
+            <BootstrapForm onSubmit={handleFullNameSubmit}>
+              <BootstrapForm.Group controlId="fullName">
+                <BootstrapForm.Control
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </BootstrapForm.Group>
+              <Button variant="primary" type="submit">
+                Submit
+              </Button>
+            </BootstrapForm>
+          </Card.Body>
+        </Card>
+      )}
       {(isLoadingExam || isLoadingQuestions) && <Spinner animation="border" />}
       {(examError || questionsError) && <Alert variant="danger">Error: {examError || questionsError}</Alert>}
-      {exam && (
+      {fullNameSubmitted && exam && (
         <Card>
           <Card.Body>
             <Card.Title>Exam: {exam.examName}</Card.Title>

@@ -21,11 +21,11 @@ const GetQuestionAnswers = ({ questionId }) => {
   };
 
   const handleDeleteSuccess = () => {
-    setDeleteAnswer(null);
+    setDeleteAnswer(null); 
     setShowForm(false);
     refetch();
   };
-
+  
 
   return (
     <div>

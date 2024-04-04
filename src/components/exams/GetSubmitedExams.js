@@ -17,6 +17,13 @@ const GetSubmitedExams = () => {
 
     const { data: submittedExams, isLoading, error } = useFetch(getAllStudentExamsApiUrl);
     const { filterText, setFilterText, filteredData } = useFilterableTable(submittedExams || []);
+    const excludedProperties = ['wasExamLoggedInToByStudent','questionsFailed', 'examStartTime'];
+    const filteredDataWithoutExcludedProperties = filteredData.map(exam => {
+        const filteredExam = { ...exam };
+        excludedProperties.forEach(prop => delete filteredExam[prop]);
+        return filteredExam;
+    })
+
 
     const handleGetQuestionFailed = (studentExamId) => {
         setStudentExamId(studentExamId);
@@ -35,7 +42,7 @@ const GetSubmitedExams = () => {
                     <div>
                         <SearchBar filterText={filterText} setFilterText={setFilterText} />
                         <div style={{ overflowX: 'auto' }}>
-                            <DataTable data={filteredData} onGetQuestionFailed={handleGetQuestionFailed} />
+                            <DataTable data={filteredDataWithoutExcludedProperties} onGetQuestionFailed={handleGetQuestionFailed} />
                         </div>
                         <Modal show={!!studentExamId} onHide={clearStudentExamId}>
                             <Modal.Header closeButton>
