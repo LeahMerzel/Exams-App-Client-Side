@@ -45,6 +45,10 @@ const GetExamQuestions = ({ examId, onCloseForm }) => {
     refetch();
   };
 
+  const handleUpdateQuestion = () => {
+    refetch();
+  }
+
   const handleCancel = () => {
     setShowForm(false);
     onCloseForm();
@@ -79,7 +83,7 @@ const GetExamQuestions = ({ examId, onCloseForm }) => {
               <Button className="m-2 mt-3" variant="primary" onClick={() => handleViewAnswers(question.id)}>View Answers</Button>
               <Button className="m-2 mt-3" variant="primary" onClick={() => handleAddAnswer(question.id)}>Add Answer</Button>
               <Button className="m-2 mt-3" variant="danger" onClick={() => handleDelete(question.id)}>Delete</Button>
-              {selectedQuestionId === question.id && <UpdateQuestion questionId={question.id} />}
+              {selectedQuestionId === question.id && <UpdateQuestion questionId={question.id} onUpdate={handleUpdateQuestion}/>}
               {deleteQuestion === question.id && <RemoveQuestion questionId={question.id} onDeleteSuccess={handleDeleteSuccess}/>}
               {viewAnswers === question.id && <GetQuestionAnswers questionId={question.id} />}
               {addAnswer === question.id && <CreateNewAnswer questionId={question.id} onAddSuccess={handleAddSuccess}/>}

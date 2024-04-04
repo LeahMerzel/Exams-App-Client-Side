@@ -5,7 +5,7 @@ import useFetch from '../../hooks/useFetch';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const UpdateQuestion = ({questionId}) => {
+const UpdateQuestion = ({questionId, onUpdate}) => {
     const getQuestionApiUrl = `https://localhost:7252/api/Question/get-by-id/${questionId}`;
     const { data: questionToUpdate, isLoading: isLoadingQuestion, error: questionError} = useFetch(getQuestionApiUrl);  
     const updateQuestionApiUrl = "https://localhost:7252/api/Question/update";
@@ -42,9 +42,9 @@ const UpdateQuestion = ({questionId}) => {
         try {
           const response = await updateEntity(formData);
           if (response) {
-            console.log(response)
             toast.success('Update successful!');
             setShowForm(false);
+            onUpdate();
           }
         } catch (error) {
           console.error('Update failed:', error.message);

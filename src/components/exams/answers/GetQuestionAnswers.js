@@ -26,6 +26,10 @@ const GetQuestionAnswers = ({ questionId }) => {
     refetch();
   };
   
+  const handleCancel = () => {
+    setShowForm(false);
+  }
+
 
   return (
     <div>
@@ -57,6 +61,7 @@ const GetQuestionAnswers = ({ questionId }) => {
               {deleteAnswer === answer.id && <RemoveAnswer answerId={answer.id} onDeleteSuccess={handleDeleteSuccess}/>}
             </div>
           ))}
+          <Button className="mt-3" variant="secondary" onClick={handleCancel}>Close Question Answers</Button>
         </div>
       )}
     </div>
